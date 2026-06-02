@@ -1,0 +1,1 @@
+export * from './use-register-new-user.hook'
