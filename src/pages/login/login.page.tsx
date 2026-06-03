@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLoginUserHook } from '../../hooks'
 import { useAuthStore } from '../../stores'
+import type { ILoginUserResponse } from '../../dto'
+import { GuestGuard } from '../../guards'
 
 export interface ILoginPageProps {
   default_props?: boolean
@@ -63,7 +65,7 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
         onSuccess: (data) => {
           console.log('Login successful')
           if(data?.data?.user) {
-            const connected = {
+            const connected:ILoginUserResponse = {
               user: data.data.user,
               access_token: data.data.access_token
             }
@@ -88,88 +90,90 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center p-4">
-      <div className="bg-black rounded-2xl p-8 md:p-12 w-full max-w-md">
-        <div className="mb-8">
-          <BagIcon className="w-8 h-8 text-white" />
-        </div>
-
-        <h1 className="text-white text-2xl font-semibold mb-2">Welcome Back!</h1>
-        <p className="text-gray-400 text-sm mb-8">Build, test, and launch full-stack web and mobile apps</p>
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 border border-transparent focus:border-gray-600 focus:outline-none transition-colors text-sm"
-            />
+    <GuestGuard>
+      <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center p-4">
+        <div className="bg-black rounded-2xl p-8 md:p-12 w-full max-w-md">
+          <div className="mb-8">
+            <BagIcon className="w-8 h-8 text-white" />
           </div>
 
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 pr-12 border border-transparent focus:border-gray-600 focus:outline-none transition-colors text-sm"
-            />
+          <h1 className="text-white text-2xl font-semibold mb-2">Welcome Back!</h1>
+          <p className="text-gray-400 text-sm mb-8">Build, test, and launch full-stack web and mobile apps</p>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 border border-transparent focus:border-gray-600 focus:outline-none transition-colors text-sm"
+              />
+            </div>
+
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 pr-12 border border-transparent focus:border-gray-600 focus:outline-none transition-colors text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-400 transition-colors"
+              >
+                {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+              </button>
+            </div>
+
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-400 transition-colors"
+              type="submit"
+              className="w-full bg-white text-black font-medium rounded-full py-3.5 hover:bg-gray-100 transition-colors mt-2"
             >
-              {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+              Login
+            </button>
+          </form>
+
+          <div className="text-center mt-4">
+            <Link to="/forgot-password" className="text-white text-sm hover:text-gray-300 transition-colors">
+              Forgot Password?
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-gray-800"></div>
+            <span className="text-gray-500 text-sm">or continue with</span>
+            <div className="flex-1 h-px bg-gray-800"></div>
+          </div>
+
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={handleGoogleLogin}
+              className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+            >
+              <GoogleIcon className="w-6 h-6" />
+            </button>
+            <button
+              onClick={handleFacebookLogin}
+              className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+            >
+              <FacebookIcon className="w-6 h-6" />
             </button>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-white text-black font-medium rounded-full py-3.5 hover:bg-gray-100 transition-colors mt-2"
-          >
-            Login
-          </button>
-        </form>
-
-        <div className="text-center mt-4">
-          <Link to="/forgot-password" className="text-white text-sm hover:text-gray-300 transition-colors">
-            Forgot Password?
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-4 my-6">
-          <div className="flex-1 h-px bg-gray-800"></div>
-          <span className="text-gray-500 text-sm">or continue with</span>
-          <div className="flex-1 h-px bg-gray-800"></div>
-        </div>
-
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={handleGoogleLogin}
-            className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-          >
-            <GoogleIcon className="w-6 h-6" />
-          </button>
-          <button
-            onClick={handleFacebookLogin}
-            className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-          >
-            <FacebookIcon className="w-6 h-6" />
-          </button>
-        </div>
-
-        <div className="text-center mt-8">
-          <p className="text-gray-400 text-sm mb-4">Don&apos;t have an account?</p>
-          <Link
-            to="/register"
-            className="block w-full bg-[#1a1a1a] text-white font-medium rounded-full py-3.5 hover:bg-[#252525] transition-colors"
-          >
-            Create account
-          </Link>
+          <div className="text-center mt-8">
+            <p className="text-gray-400 text-sm mb-4">Don&apos;t have an account?</p>
+            <Link
+              to="/register"
+              className="block w-full bg-[#1a1a1a] text-white font-medium rounded-full py-3.5 hover:bg-[#252525] transition-colors"
+            >
+              Create account
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </GuestGuard>
   )
 }
