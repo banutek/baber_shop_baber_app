@@ -9,6 +9,17 @@ export interface INewUserDtoIn {
     phone: string;
     address: string;
     role: RoleEnum;
+    access_token?: string
+}
+
+export interface ILoginUserDtoIn {
+    email: string;
+    password: string;
+}
+
+export interface ILoginUserResponse {
+    access_token: string
+    user: IUserDtoOut
 }
 
 export interface IUserDtoOut {
