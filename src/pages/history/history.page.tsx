@@ -1,5 +1,6 @@
 import React from 'react'
 import { CurrentBannerComponent,  HistoryListComponent, StatsRowComponent, TopBarComponent } from '../../components'
+import { AuthGuard } from '../../guards'
 
 export interface IHistoryPageProps {
   default_props?: boolean
@@ -8,6 +9,7 @@ export interface IHistoryPageProps {
 
 export const HistoryPage: React.FC<IHistoryPageProps> = () => {
   return (
+    <AuthGuard>
       <div className="min-h-screen bg-gray-50 text-gray-900 overflow-x-hidden">
         <style>{`
           @keyframes fadeUp {
@@ -30,5 +32,6 @@ export const HistoryPage: React.FC<IHistoryPageProps> = () => {
           <HistoryListComponent />
         </div>
       </div>
+    </AuthGuard>
     )
 }

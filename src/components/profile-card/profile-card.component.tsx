@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export interface IProfileComponentProps {
   default_props?: boolean
@@ -6,6 +7,13 @@ export interface IProfileComponentProps {
 }
 
 export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
+  const navigate = useNavigate()
+
+  const doLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  }
+
 return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-slideUp">
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-7 text-center relative">
@@ -66,6 +74,9 @@ return (
         </div>
         <button className="w-full mt-4 py-2.5 rounded-lg border-2 border-amber-600 bg-transparent text-amber-700 font-sans text-sm font-semibold hover:bg-amber-50 transition-all duration-200 tracking-wide">
           ✏️ &nbsp; Modifier le profil
+        </button>
+        <button onClick={doLogout} className="w-full mt-2.5 py-2.5 rounded-lg bg-red-500 text-white font-sans text-sm font-semibold hover:bg-red-600 transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-xl">
+          🚪 &nbsp; Se déconnecter
         </button>
       </div>
     </div>
