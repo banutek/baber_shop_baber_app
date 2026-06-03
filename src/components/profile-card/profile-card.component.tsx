@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../stores'
 
 export interface IProfileComponentProps {
   default_props?: boolean
@@ -8,6 +9,7 @@ export interface IProfileComponentProps {
 
 export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const navigate = useNavigate()
+  const { currentUser } = useAuthStore()
 
   const doLogout = () => {
     localStorage.removeItem('user');
@@ -25,13 +27,13 @@ return (
         <div className="relative">
           <div className="relative inline-block mb-3.5">
             <div className="w-[84px] h-[84px] rounded-full bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center font-serif text-3xl text-white border-[3px] border-white/15 shadow-lg">
-              A
+              {`${currentUser?.user?.firstName?.[0] || ''}${currentUser?.user?.lastName?.[0] || ''}`.toUpperCase()}
             </div>
             <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-green-500 border-[3px] border-gray-900 animate-pulse"></div>
           </div>
-          <div className="font-serif text-xl text-white mb-1">Ahmed Benali</div>
+          <div className="font-serif text-xl text-white mb-1">{`${currentUser?.user?.firstName} ${currentUser?.user?.lastName}`}</div>
           <div className="text-xs text-amber-500 uppercase tracking-wider font-medium">
-            Coiffeur · Salon Baraka
+            {`${currentUser?.user?.role} · ${currentUser?.user?.manager_barber_shop?.name}`}
           </div>
         </div>
       </div>
@@ -42,7 +44,7 @@ return (
           </div>
           <div>
             <span className="text-xs text-gray-400 block mb-0.5">Salon</span>
-            <span className="font-medium text-gray-900">Salon Baraka — Casablanca</span>
+            <span className="font-medium text-gray-900">{`${currentUser.user.manager_barber_shop?.name} — ${currentUser.user.manager_barber_shop?.address}`}</span>
           </div>
         </div>
         <div className="flex items-center gap-2.5 py-2.5 border-b border-gray-200 text-xs text-gray-500">

@@ -54,7 +54,7 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { setConnectedUser } = useAuthStore()
+  const { setCurrentUser } = useAuthStore()
   const { mutate: doLoginUser } = useLoginUserHook()
 
   const handleLogin = (e: React.FormEvent) => {
@@ -69,7 +69,7 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
               user: data.data.user,
               access_token: data.data.access_token
             }
-            setConnectedUser(connected)
+            setCurrentUser(connected)
             localStorage.setItem('user', JSON.stringify(connected))
             navigate('/')
           }

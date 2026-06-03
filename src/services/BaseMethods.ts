@@ -15,8 +15,8 @@ class BaseMethods {
 
   static getHeadersAuth = (isFile?: boolean) => {
     const headers = BaseMethods.getHeaders(isFile)
-    const token = localStorage.getItem('access_token')
-      ? localStorage.getItem('access_token') || ''
+    const token = localStorage.getItem('user')
+      ? JSON.parse(localStorage.getItem('user')).access_token
       : ''
     const copyHeaders = {
       Authorization: `Bearer ${token}`,

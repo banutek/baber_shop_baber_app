@@ -5,3 +5,7 @@ export const authUrls = {
     LOGIN_USER: `${prefixer}auth/login`,
     REGISTER_USER: `${prefixer}auth/register`,
 }
+
+export const barberShopUrls = {
+    CREATE_BARBER_SHOP: `${prefixer}barber-shop/create`,
+}

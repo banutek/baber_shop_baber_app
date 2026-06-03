@@ -1,5 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import { HistoryPage, HomePage, LoginPage, RegisterPage, WaitingListPage } from './pages'
+import { CreateNewShop, HistoryPage, HomePage, LoginPage, RegisterPage, WaitingListPage } from './pages'
 
 function App() {
 
@@ -11,6 +11,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/waiting-list" element={<WaitingListPage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/create-new-shop" element={<CreateNewShop />} />
       </Routes>
     </Router>
   )

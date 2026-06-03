@@ -1,5 +1,6 @@
 
 import { RoleEnum } from "../enums";
+import type { IBarberShopDtoOut } from "./barber-shop.dto";
 
 export interface INewUserDtoIn {
     firstName: string;
@@ -33,7 +34,7 @@ export interface IUserDtoOut {
     createdAt: Date;
     updatedAt: Date;
 
-    manager_barber_shop?: string;
+    manager_barber_shop?: IBarberShopDtoOut;
     client_device?: string;
     user_clients_profile?: string;
 }

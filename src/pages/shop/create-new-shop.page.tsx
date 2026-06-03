@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useRegisterNewUserHook } from '../../hooks'  
-import { RoleEnum, type INewUserDtoIn } from '../../dto'
-import { GuestGuard } from '../../guards'
+import { useCreateNewShopHook } from '../../hooks'  
+import { type INewBarberShopDtoIn } from '../../dto'
+import { AuthGuard } from '../../guards'
 import { useNavigate } from 'react-router-dom'
 
-export interface IRegisterPageProps {
+export interface ICreateNewShopProps {
   default_props?: boolean
   default_method?: () => void
 }
@@ -34,26 +34,25 @@ const countries: Country[] = [
   { code: 'MU', name: 'Mauritius', flag: '🇲🇺', dialCode: '+230' },
 ]
 
-export const RegisterPage: React.FC<IRegisterPageProps> = () => {
+export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const navigate = useNavigate()
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [showCountryDropdown, setShowCountryDropdown] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState(countries[0]) // Nigeria by default
-  const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
+  const [formDatas, setFormDatas] = useState<INewBarberShopDtoIn>({
+    name: '',
     address: '',
-    password: '',
-    confirmPassword: '',
-    agreeTerms: false
+    phone: '',
+    latitude: undefined,
+    longitude: undefined,
+    email: ''
   })
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
   
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const { mutate: doRegisterNewUser } = useRegisterNewUserHook()
+  const { mutate: doCreateNewShop } = useCreateNewShopHook()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -69,36 +68,103 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
     }
   }, [])
 
+  const handleImageUpload = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string)
+        setFormDatas({...formDatas, profileImage: file})
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      handleImageUpload(file)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) {
+      handleImageUpload(file)
+    }
+  }
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const removeImage = () => {
+    setImagePreview(null)
+    setFormDatas({...formDatas, profileImage: undefined})
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    const requestDatas: INewUserDtoIn = {
-      firstName: formData.first_name,
-      lastName: formData.last_name,
-      email: formData.email,
-      password: formData.password,
-      phone: formData.phone,
-      address: formData.address,
-      role: RoleEnum.BARBER
+    
+    // Créer FormData pour l'envoi du fichier
+    const formDataToSend = new FormData()
+    formDataToSend.append('name', formDatas.name)
+    formDataToSend.append('address', formDatas.address)
+    formDataToSend.append('phone', formDatas.phone)
+    
+    if (formDatas.email) {
+      formDataToSend.append('email', formDatas.email)
     }
-    doRegisterNewUser(requestDatas, {
+    
+    if (formDatas.latitude) {
+      formDataToSend.append('latitude', formDatas.latitude.toString())
+    }
+    
+    if (formDatas.longitude) {
+      formDataToSend.append('longitude', formDatas.longitude.toString())
+    }
+    
+    if (formDatas.profileImage) {
+      formDataToSend.append('profileImage', formDatas.profileImage)
+    }
+    
+    console.log('Form submitted with FormData:', formDataToSend)
+    doCreateNewShop(formDataToSend, {
       onSuccess: (data) => {
-        console.log('User registered successfully:', data.data.user)
+        console.log('Shop created successfully:', data.data.shop)
+        const connectedUser = JSON.parse(localStorage.getItem('user'))
+        connectedUser.user.manager_barber_shop = data.data.shop
+        localStorage.setItem('user', JSON.stringify(connectedUser))
+        navigate('/')
       },
       onError: (error) => {
-        console.error('Error registering user:', error)
+        console.error('Error creating shop:', error)
       }
     })
   }
 
   return (
-    <GuestGuard>
+    <AuthGuard>
       <div className="min-h-screen bg-gradient-to-br from-purple-500 to-purple-800 flex items-center justify-center p-5 font-sans">
         <div className="bg-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl overflow-visible">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-white text-3xl font-semibold mb-3 tracking-tight">
-              Create Account
+              Créer le salon
             </h1>
             <p className="text-gray-400 text-base leading-relaxed m-0 max-w-sm mx-auto">
               Build, test, and launch full-stack web and mobile apps — all in one flow.
@@ -106,7 +172,6 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
           </div>
 
           <form onSubmit={handleSubmit}>
-            {/* Phone Number Input */}
             <div className="mb-5">
               <div className="flex bg-gray-800 rounded-xl border border-gray-700 relative">
                 {/* Country Selector Dropdown */}
@@ -157,33 +222,22 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 <input
                   type="tel"
                   placeholder="Phone number"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  value={formDatas.phone}
+                  onChange={(e) => setFormDatas({...formDatas, phone: e.target.value})}
                   className="flex-1 bg-transparent border-none p-4 text-white text-base outline-none"
                 />
               </div>
             </div>
 
-                {/* First name Input */}
+                {/* Barbershop name Input */}
             <div className="mb-5">
               <input
                 type="text"
-                placeholder="Prénom"
-                value={formData.first_name}
-                onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                placeholder="Nom du salon"
+                value={formDatas.name}
+                onChange={(e) => setFormDatas({...formDatas, name: e.target.value})}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
-            </div>
-              
-                {/* Last name Input */}
-            <div className="mb-5">
-                <input
-                  type="text"
-                  placeholder="Nom de famille"
-                  value={formData.last_name}
-                  onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
-                />
             </div>
 
             {/* Email Input */}
@@ -191,8 +245,8 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
               <input
                 type="email"
                 placeholder="Email address"
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                value={formDatas.email}
+                onChange={(e) => setFormDatas({...formDatas, email: e.target.value})}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
@@ -202,72 +256,87 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
               <input
                 type="text"
                 placeholder="Address"
-                value={formData.address}
-                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                value={formDatas.address}
+                onChange={(e) => setFormDatas({...formDatas, address: e.target.value})}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-
-            {/* Password Input */}
+         
+            {/* Latitude Input */}
             <div className="mb-5">
-              <div className="relative bg-gray-800 rounded-xl border border-gray-700">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  className="w-full bg-transparent border-none p-4 pr-12 text-white text-base outline-none box-border"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-none border-none text-gray-400 cursor-pointer text-xl p-0"
-                >
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
-                </button>
-              </div>
+              <input
+                type="text"
+                placeholder="Latitude"
+                value={formDatas.latitude || ''}
+                onChange={(e) => setFormDatas({...formDatas, latitude: Number(e.target.value)})}
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+              />
             </div>
-
-            {/* Confirm Password Input */}
-            <div className="mb-6">
-              <div className="relative bg-gray-800 rounded-xl border border-gray-700">
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="Confirm password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                  className="w-full bg-transparent border-none p-4 pr-12 text-white text-base outline-none box-border"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-none border-none text-gray-400 cursor-pointer text-xl p-0"
-                >
-                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
-                </button>
-              </div>
+         
+            {/* Longitude Input */}
+            <div className="mb-5">
+              <input
+                type="text"
+                placeholder="Longitude"
+                value={formDatas.longitude || ''}
+                onChange={(e) => setFormDatas({...formDatas, longitude: Number(e.target.value)})}
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+              />
             </div>
-
-            {/* Terms Checkbox */}
-            <div className="mb-6">
-              <label className="flex items-start text-gray-400 text-sm leading-relaxed cursor-pointer">
+        
+            {/* Profile Image Upload */}
+            <div className="mb-5">
+              <div
+                className={`w-full bg-gray-800 border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+                  isDragging 
+                    ? 'border-purple-500 bg-purple-900/20' 
+                    : 'border-gray-700 hover:border-gray-600'
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={handleImageClick}
+              >
                 <input
-                  type="checkbox"
-                  checked={formData.agreeTerms}
-                  onChange={(e) => setFormData({...formData, agreeTerms: e.target.checked})}
-                  className="mr-3 mt-0.5 w-4 h-4 accent-purple-500"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
                 />
-                <span>
-                  By creating an account, you agree to our{' '}
-                  <a href="#" className="text-purple-500 no-underline hover:underline">
-                    Terms of Use
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="text-purple-500 no-underline hover:underline">
-                    Privacy Policy
-                  </a>
-                </span>
-              </label>
+                
+                {imagePreview ? (
+                  <div className="relative">
+                    <img 
+                      src={imagePreview} 
+                      alt="Profile preview" 
+                      className="w-32 h-32 mx-auto rounded-lg object-cover mb-3"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        removeImage()
+                      }}
+                      className="absolute top-0 right-1/4 transform translate-x-12 -translate-y-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                    >
+                      ×
+                    </button>
+                    <p className="text-gray-400 text-sm">Cliquez ou glissez pour remplacer l'image</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="w-16 h-16 mx-auto mb-3 bg-gray-700 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-400 text-sm mb-1">Glissez-déposez une image ici</p>
+                    <p className="text-gray-500 text-xs">ou cliquez pour sélectionner</p>
+                    <p className="text-gray-600 text-xs mt-2">PNG, JPG, GIF jusqu'à 10MB</p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Create Account Button */}
@@ -286,17 +355,6 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
             <div className="flex-1 h-px bg-gray-700" />
           </div>
 
-          {/* Social Login Buttons */}
-          <div className="flex gap-3 mb-8">
-            <button className="flex-1 flex items-center justify-center gap-2 bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-sm cursor-pointer transition-colors hover:bg-gray-700">
-              <span className="text-lg">🔍</span>
-              Google
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-2 bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-sm cursor-pointer transition-colors hover:bg-gray-700">
-              <span className="text-lg">📘</span>
-              Facebook
-            </button>
-          </div>
 
           {/* Login Link */}
           <div className="text-center text-gray-400 text-sm">
@@ -307,6 +365,6 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
           </div>
         </div>
       </div>
-    </GuestGuard>
+    </AuthGuard>
   )
 }
