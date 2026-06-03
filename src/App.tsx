@@ -1,5 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import { HomePage, LoginPage, RegisterPage } from './pages'
+import { HistoryPage, HomePage, LoginPage, RegisterPage, WaitingListPage } from './pages'
 
 function App() {
 
@@ -9,6 +9,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/waiting-list" element={<WaitingListPage />} />
+        <Route path="/history" element={<HistoryPage />} />
       </Routes>
     </Router>
   )

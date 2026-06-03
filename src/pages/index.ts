@@ -1,3 +1,5 @@
 export * from './register/register.page'
 export * from './login/login.page'
 export * from './home/home.page'
+export * from './waiting-list/waiting-list.page'
+export * from './history/history.page'
