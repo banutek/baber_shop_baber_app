@@ -12,4 +12,5 @@ export const barberShopUrls = {
 
     CREATE_WAITING_LIST: `${prefixer}waiting-list/create`,
     GET_WAITING_LIST_BY_SHOP_ID: (shopId: string) => `${prefixer}waiting-list/by-shop-id/${shopId}`,
+    UPDATE_WAITING_LIST_STATUS: (listId: string) => `${prefixer}waiting-list/status/${listId}`,
 }

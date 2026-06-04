@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useShopStore } from '../../stores'
-import { useCreateNewWaitingListHook, useGetWaitingListByShopHook } from '../../hooks'
+import { useCreateNewWaitingListHook, useGetWaitingListByShopHook, useUpdateWaitingListStatusHook } from '../../hooks'
 import { WaitingListStatusEnum, type INewWaitingListDtoIn, type IWaitingListNumbersDtoOut } from '../../dto'
 
 export interface IQueueRecapComponentProps {
@@ -12,11 +12,13 @@ export interface IQueueRecapComponentProps {
 
 export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpenNextNumberModal }) => {
   const navigate = useNavigate()
+  
   const { currentShop, setCurrentShop, currentWaitingList, setCurrentWaitingList } = useShopStore()
-  const isOpen = currentShop?.barber_shop_waiting_list
+  const isOpen = currentShop?.barber_shop_waiting_list?.status === WaitingListStatusEnum.OPEN
   const isCurrentNumberGreaterThanZero = currentWaitingList?.current_number > 0
 
   const { mutate: doCreateNewWaitingList } = useCreateNewWaitingListHook()
+  const { mutate: doUpdateWaitingListStatus } = useUpdateWaitingListStatusHook()
   const { data: waitingListData } = useGetWaitingListByShopHook(currentShop?.id)
 
   useEffect(() => {
@@ -26,13 +28,36 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
   },[waitingListData])
 
   const handleOpenWaitingList = () => {
+    if(currentShop?.barber_shop_waiting_list){
+      const requestDatas = {
+        listId: currentShop.barber_shop_waiting_list.id,
+        datas: {
+          status: WaitingListStatusEnum.OPEN
+        }
+      }
+      doUpdateWaitingListStatus(requestDatas, {
+        onSuccess: (data) => {
+          if (data.data?.waitingList) {
+            setCurrentShop({
+              ...currentShop,
+              barber_shop_waiting_list: data.data.waitingList
+            })
+            setCurrentWaitingList(data.data.waitingList)
+          }
+        },
+        onError: (error) => {
+          console.log('Waiting list not updated', error)
+        }
+      })
+      return
+    }
     const requestDatas: INewWaitingListDtoIn = {
       current_number:0,
       session_date:new Date(),
       status:WaitingListStatusEnum.OPEN,
       barberShopId:currentShop?.id
     }
-    doCreateNewWaitingList(requestDatas,{
+    doCreateNewWaitingList(requestDatas,{ 
       onSuccess: (data) => {
         console.log('Waiting list opened', data.data?.waitingList)
         if (data.data?.waitingList) {

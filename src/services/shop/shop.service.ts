@@ -1,4 +1,4 @@
-import type { INewWaitingListDtoIn } from "../../dto";
+import type { INewWaitingListDtoIn, IUpdateWaitingListStatusDtoIn } from "../../dto";
 import BaseMethods from "../BaseMethods";
 import { barberShopUrls } from "../url";
 
@@ -8,4 +8,5 @@ export class ShopService {
 
     static create_waiting_list = (infos: INewWaitingListDtoIn) => BaseMethods.postRequest(barberShopUrls.CREATE_WAITING_LIST, infos, true)
     static get_waiting_list_by_shop_id = (shopId: string) => BaseMethods.getRequest(barberShopUrls.GET_WAITING_LIST_BY_SHOP_ID(shopId), true)
+    static update_waiting_list_status = (listId: string, datas: IUpdateWaitingListStatusDtoIn) => BaseMethods.patchRequest(barberShopUrls.UPDATE_WAITING_LIST_STATUS(listId), datas, true)
 }

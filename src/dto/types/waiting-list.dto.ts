@@ -1,4 +1,5 @@
 
+import type { WaitingListStatusEnum } from "../enums";
 import type { IBarberShopDtoOut } from "./barber-shop.dto";
 import type { IWaitingListNumbersDtoOut } from "./waiting-list-numbers.dto";
 
@@ -20,4 +21,8 @@ export interface INewWaitingListDtoIn {
     session_date: Date;
     status: string;
     barberShopId: string;
+}
+
+export interface IUpdateWaitingListStatusDtoIn {
+    status: WaitingListStatusEnum;
 }

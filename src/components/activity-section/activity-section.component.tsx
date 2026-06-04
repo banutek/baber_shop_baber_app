@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useShopStore } from '../../stores'
+import { WaitingListStatusEnum } from '../../dto'
 
 export interface IActivitySectionComponentProps {
   default_props?: boolean
@@ -9,19 +10,22 @@ export interface IActivitySectionComponentProps {
 
 export const ActivitySectionComponent: React.FC<IActivitySectionComponentProps> = () => {
   const navigate = useNavigate()
-   const { currentShop } = useShopStore()
-    const isOpen = currentShop?.barber_shop_waiting_list
+   const { currentShop, currentWaitingList } = useShopStore()
+    const isOpen = currentShop?.barber_shop_waiting_list?.status === WaitingListStatusEnum.OPEN
+    const isCurrentNumberGreaterThanZero = currentWaitingList?.current_number > 0
   
 return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-slideUp" style={{ animationDelay: '0.14s' }}>
       <div className="flex items-center justify-between px-[22px] py-[18px] border-b border-gray-200">
         <div className="font-serif text-base text-gray-900">Activité récente</div>
         { isOpen ?
+          isCurrentNumberGreaterThanZero ?
         <div className="text-xs text-amber-700 font-semibold cursor-pointer uppercase tracking-wide" onClick={() => navigate('/history')}>Historique</div> : 
+        <div className="text-xs text-red-400 uppercase">Aucune activité récente</div> : 
         <div className="text-xs text-red-400 uppercase">Vous êtes fermé actuellement</div>
         }
       </div>
-      { isOpen &&
+      { isOpen && isCurrentNumberGreaterThanZero &&
         <div className="py-2">
           <div className="flex items-center gap-3 py-3 px-[22px]">
             <div className="w-2.5 h-2.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0"></div>
