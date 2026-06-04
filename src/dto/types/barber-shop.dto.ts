@@ -1,5 +1,6 @@
 
 import type { IUserDtoOut } from "./user.dto";
+import type { IWaitingListDtoOut } from "./waiting-list.dto";
 
 export interface INewBarberShopDtoIn {
     name: string;
@@ -26,6 +27,6 @@ export interface IBarberShopDtoOut {
     managerId: string;
     manager: IUserDtoOut;
     barber_shop_subscription: string;
-    barber_shop_waiting_list: string;
+    barber_shop_waiting_list: IWaitingListDtoOut;
     barber_shop_scan_event: string;
 }

@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivitySectionComponent, ProfileCardComponent, QueueRecapComponent, StatsRowComponent, TopBarComponent } from '../../components'
 import { AuthGuard } from '../../guards'
+import { useGetShopByManagerHook } from '../../hooks'
+import { useShopStore } from '../../stores'
+import type { IWaitingListNumbersDtoOut } from '../../dto'
+import { QRCodeSVG } from 'qrcode.react';
 
 export interface IHomePageProps {
   default_props?: boolean
@@ -9,6 +13,36 @@ export interface IHomePageProps {
 
 
 export const HomePage: React.FC<IHomePageProps> = () => {
+  const { setCurrentShop } = useShopStore()
+  const { data } = useGetShopByManagerHook()
+  
+  // Modal state for next number
+  const [showNextNumberModal, setShowNextNumberModal] = useState(false)
+  const [nextNumber, setNextNumber] = useState<IWaitingListNumbersDtoOut | null>(null)
+
+  useEffect(() => {
+    if(data){
+      console.log('the response::::', data.data.shop)
+      setCurrentShop(data.data.shop)
+    }
+  },[data])
+  
+  const handleOpenNextNumberModal = (number: IWaitingListNumbersDtoOut) => {
+    console.log({number})
+    setNextNumber(number)
+    setShowNextNumberModal(true)
+  }
+  
+  const handleCloseModal = () => {
+    setShowNextNumberModal(false)
+    setNextNumber(null)
+  }
+  
+  const handleAbsent = () => {
+    setShowNextNumberModal(false)
+    // TODO: Marquer le numéro comme absent
+    console.log('Client absent:', nextNumber)
+  }
   
   return (
     <AuthGuard>
@@ -34,10 +68,69 @@ export const HomePage: React.FC<IHomePageProps> = () => {
           
           {/* Main Content */}
           <main className="md:col-span-8 flex flex-col gap-5">
-            <QueueRecapComponent />
+            <QueueRecapComponent onOpenNextNumberModal={handleOpenNextNumberModal} />
             <ActivitySectionComponent />
           </main>
         </div>
+        
+        {/* Modal - Numéro Suivant (au niveau de HomePage pour être au premier plan) */}
+        {showNextNumberModal && nextNumber && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slideUp relative">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-serif text-xl text-gray-900">Prochain numéro</h3>
+                <button 
+                  onClick={handleCloseModal}
+                  className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Numéro */}
+              <div className="text-center mb-6">
+                <div className="font-serif text-6xl font-bold text-green-600 mb-2">
+                  {nextNumber.value}
+                </div>
+                <div className="text-sm text-gray-400 uppercase tracking-wide">
+                  Numéro suivant
+                </div>
+              </div>
+
+              {/* Code-barres */}
+              <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                <div className="flex justify-center">
+                  <QRCodeSVG
+                    value={'nextNumber.barcode'}   // "QF-007-A3F9C12D4E5B6F7A"
+                    size={350}
+                    level="H"
+                    marginSize={2}
+                  />
+                </div>
+                <div className="text-center text-sm text-gray-600 font-mono mt-2">
+                  {nextNumber.barcode}
+                </div>
+              </div>
+
+              {/* Boutons */}
+              <div className="flex gap-3">
+                <button 
+                  onClick={handleAbsent}
+                  className="flex-1 py-3 px-4 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors"
+                >
+                  🚫 Absent
+                </button>
+                <button 
+                  onClick={handleCloseModal}
+                  className="flex-1 py-3 px-4 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors"
+                >
+                  ✅ Servir
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
       </div>
     </AuthGuard>

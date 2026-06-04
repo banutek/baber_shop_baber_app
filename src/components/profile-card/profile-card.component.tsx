@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../../stores'
+import { useAuthStore, useShopStore } from '../../stores'
 
 export interface IProfileComponentProps {
   default_props?: boolean
@@ -10,6 +10,7 @@ export interface IProfileComponentProps {
 export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const navigate = useNavigate()
   const { currentUser } = useAuthStore()
+  const { currentShop } = useShopStore()
 
   const doLogout = () => {
     localStorage.removeItem('user');
@@ -33,7 +34,7 @@ return (
           </div>
           <div className="font-serif text-xl text-white mb-1">{`${currentUser?.user?.firstName} ${currentUser?.user?.lastName}`}</div>
           <div className="text-xs text-amber-500 uppercase tracking-wider font-medium">
-            {`${currentUser?.user?.role} · ${currentUser?.user?.manager_barber_shop?.name}`}
+            {`${currentUser?.user?.role} · ${currentShop?.name}`}
           </div>
         </div>
       </div>
@@ -44,7 +45,7 @@ return (
           </div>
           <div>
             <span className="text-xs text-gray-400 block mb-0.5">Salon</span>
-            <span className="font-medium text-gray-900">{`${currentUser.user.manager_barber_shop?.name} — ${currentUser.user.manager_barber_shop?.address}`}</span>
+            <span className="font-medium text-gray-900">{`${currentShop?.name} — ${currentShop?.address}`}</span>
           </div>
         </div>
         <div className="flex items-center gap-2.5 py-2.5 border-b border-gray-200 text-xs text-gray-500">

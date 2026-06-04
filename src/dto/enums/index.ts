@@ -1,1 +1,2 @@
-export { RoleEnum } from "./user.enum";
+export * from "./user.enum";
+export * from './shop.enum'
