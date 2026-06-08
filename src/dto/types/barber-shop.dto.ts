@@ -1,4 +1,5 @@
 
+import type { ShopOpenStatus } from "../enums";
 import type { IUserDtoOut } from "./user.dto";
 import type { IWaitingListDtoOut } from "./waiting-list.dto";
 
@@ -22,11 +23,12 @@ export interface IBarberShopDtoOut {
     phone: string;
     email: string;
     isActive: boolean;
+    openStatus: ShopOpenStatus;
     createdAt: Date;
     updatedAt: Date;
     managerId: string;
     manager: IUserDtoOut;
     barber_shop_subscription: string;
-    barber_shop_waiting_list: IWaitingListDtoOut;
+    barber_shop_waiting_list: IWaitingListDtoOut[];
     barber_shop_scan_event: string;
 }

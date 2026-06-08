@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useShopStore } from '../../stores'
 import { useCreateNewWaitingListHook, useGetWaitingListByShopHook, useUpdateWaitingListStatusHook } from '../../hooks'
-import { WaitingListStatusEnum, type INewWaitingListDtoIn, type IWaitingListNumbersDtoOut } from '../../dto'
+import { ShopOpenStatus, WaitingListStatusEnum, type INewWaitingListDtoIn, type IWaitingListNumbersDtoOut } from '../../dto'
 
 export interface IQueueRecapComponentProps {
   default_props?: boolean
@@ -14,7 +14,6 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
   const navigate = useNavigate()
   
   const { currentShop, setCurrentShop, currentWaitingList, setCurrentWaitingList } = useShopStore()
-  const isOpen = currentShop?.barber_shop_waiting_list?.status === WaitingListStatusEnum.OPEN
   const isCurrentNumberGreaterThanZero = currentWaitingList?.current_number > 0
 
   const { mutate: doCreateNewWaitingList } = useCreateNewWaitingListHook()
@@ -28,11 +27,14 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
   },[waitingListData])
 
   const handleOpenWaitingList = () => {
-    if(currentShop?.barber_shop_waiting_list){
+    const currentList = currentShop.barber_shop_waiting_list.find((_) => new Date(_.createdAt).getDay() === new Date().getDay())
+    console.log({currentList})
+    if(currentList){
       const requestDatas = {
-        listId: currentShop.barber_shop_waiting_list.id,
+        listId: currentList.id,
         datas: {
-          status: WaitingListStatusEnum.OPEN
+          status: WaitingListStatusEnum.OPEN,
+          openStatus: ShopOpenStatus.OPEN
         }
       }
       doUpdateWaitingListStatus(requestDatas, {
@@ -40,7 +42,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
           if (data.data?.waitingList) {
             setCurrentShop({
               ...currentShop,
-              barber_shop_waiting_list: data.data.waitingList
+              openStatus: ShopOpenStatus.OPEN
             })
             setCurrentWaitingList(data.data.waitingList)
           }
@@ -63,7 +65,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
         if (data.data?.waitingList) {
           setCurrentShop({
             ...currentShop,
-            barber_shop_waiting_list: data.data.waitingList
+            openStatus: ShopOpenStatus.OPEN
           })
           setCurrentWaitingList(data.data.waitingList)
         }
@@ -104,13 +106,13 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
           <div className="font-serif text-base text-gray-900">File d'attente</div>
           <div className="text-xs text-red-400 uppercase">Vous êtes fermé</div>
       </div>
-        { isOpen ?
+        { currentShop.openStatus === ShopOpenStatus.OPEN ?
           <div className="text-xs text-amber-700 font-semibold cursor-pointer uppercase tracking-wide" onClick={() => navigate('/waiting-list')}>Tout voir</div>
           :
           <div className="text-xs text-green-700 font-bold cursor-pointer uppercase tracking-wide" onClick={handleOpenWaitingList}>Ouvrir la file d'attente</div>
         }
       </div>
-      { isOpen &&
+      { currentShop.openStatus === ShopOpenStatus.OPEN &&
         <div className="p-[18px]">
           { isCurrentNumberGreaterThanZero ?
             <div className="flex items-center gap-3.5 bg-gray-50 rounded-lg p-3.5 mb-4">
@@ -137,7 +139,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
           </div>
         </div>
       }
-      { isOpen && isCurrentNumberGreaterThanZero &&
+      { currentShop.openStatus === ShopOpenStatus.OPEN && isCurrentNumberGreaterThanZero &&
         <div className="flex flex-col">
           <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
             <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">07</div>
