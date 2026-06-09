@@ -32,3 +32,7 @@ export interface IBarberShopDtoOut {
     barber_shop_waiting_list: IWaitingListDtoOut[];
     barber_shop_scan_event: string;
 }
+
+export interface IUpdateShopStatusDtoIn {
+    openStatus: ShopOpenStatus;
+}

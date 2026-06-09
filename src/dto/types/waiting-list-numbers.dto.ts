@@ -1,4 +1,5 @@
 
+import type { WaitingListNumberStatus } from "../enums";
 import type { IWaitingListDtoOut } from "./waiting-list.dto";
 
 
@@ -6,7 +7,7 @@ export interface IWaitingListNumbersDtoOut {
     id: string;
     value: string;
     barcode: string;
-    status: string;
+    status: WaitingListNumberStatus;
     createdAt: Date;
     updatedAt: Date;
     waitingListId: string;

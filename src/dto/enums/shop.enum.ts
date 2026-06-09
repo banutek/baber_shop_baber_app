@@ -10,3 +10,4 @@ export enum ShopOpenStatus {
     BUSY = 'BUSY',
     BREAK = 'BREAK'
 }
+

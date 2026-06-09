@@ -68,7 +68,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
           
           {/* Main Content */}
           <main className="md:col-span-8 flex flex-col gap-5">
-            <QueueRecapComponent onOpenNextNumberModal={handleOpenNextNumberModal} />
+            <QueueRecapComponent onOpenNextNumberModal={handleOpenNextNumberModal} /> 
             <ActivitySectionComponent /> 
           </main>
         </div>

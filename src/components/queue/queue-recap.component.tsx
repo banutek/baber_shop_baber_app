@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useShopStore } from '../../stores'
-import { useCreateNewWaitingListHook, useGetWaitingListByShopHook, useUpdateWaitingListStatusHook } from '../../hooks'
+import { useCreateNewWaitingListHook, useGetWaitingListByShopHook, useUpdateShopStatusHook, useUpdateWaitingListStatusHook } from '../../hooks'
 import { ShopOpenStatus, WaitingListStatusEnum, type INewWaitingListDtoIn, type IWaitingListNumbersDtoOut } from '../../dto'
+import { statusListNumberConfig } from '../../dto/maps'
 
 export interface IQueueRecapComponentProps {
   default_props?: boolean
@@ -18,6 +19,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
 
   const { mutate: doCreateNewWaitingList } = useCreateNewWaitingListHook()
   const { mutate: doUpdateWaitingListStatus } = useUpdateWaitingListStatusHook()
+  const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
   const { data: waitingListData } = useGetWaitingListByShopHook(currentShop?.id)
 
   useEffect(() => {
@@ -40,10 +42,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
       doUpdateWaitingListStatus(requestDatas, {
         onSuccess: (data) => {
           if (data.data?.waitingList) {
-            setCurrentShop({
-              ...currentShop,
-              openStatus: ShopOpenStatus.OPEN
-            })
+            handleUpdateShopStatus(currentShop?.id)
             setCurrentWaitingList(data.data.waitingList)
           }
         },
@@ -63,15 +62,31 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
       onSuccess: (data) => {
         console.log('Waiting list opened', data.data?.waitingList)
         if (data.data?.waitingList) {
-          setCurrentShop({
-            ...currentShop,
-            openStatus: ShopOpenStatus.OPEN
-          })
+          handleUpdateShopStatus(currentShop?.id)
           setCurrentWaitingList(data.data.waitingList)
         }
       },
       onError: (error) => {
         console.log('Waiting list not opened', error)
+      }
+    })
+  }
+
+  const handleUpdateShopStatus = (shopId: string) => {
+    const requestDatas = {
+      shopId: shopId,
+      datas:{
+        openStatus: ShopOpenStatus.OPEN
+      }
+    }
+    doUpdateShopStatus(requestDatas, {
+      onSuccess: (data) => {
+        if (data.data?.shop) {
+          setCurrentShop(data.data.shop)
+        }
+      },
+      onError: (error) => {
+        console.log('Shop status not updated', error)
       }
     })
   }
@@ -97,7 +112,6 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
     }
   }
 
-  console.log({currentWaitingList})
   
  return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-slideUp">
@@ -106,13 +120,13 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
           <div className="font-serif text-base text-gray-900">File d'attente</div>
           <div className="text-xs text-red-400 uppercase">Vous êtes fermé</div>
       </div>
-        { currentShop.openStatus === ShopOpenStatus.OPEN ?
+        { currentShop?.openStatus === ShopOpenStatus.OPEN ?
           <div className="text-xs text-amber-700 font-semibold cursor-pointer uppercase tracking-wide" onClick={() => navigate('/waiting-list')}>Tout voir</div>
           :
           <div className="text-xs text-green-700 font-bold cursor-pointer uppercase tracking-wide" onClick={handleOpenWaitingList}>Ouvrir la file d'attente</div>
         }
       </div>
-      { currentShop.openStatus === ShopOpenStatus.OPEN &&
+      { currentShop?.openStatus === ShopOpenStatus.OPEN &&
         <div className="p-[18px]">
           { isCurrentNumberGreaterThanZero ?
             <div className="flex items-center gap-3.5 bg-gray-50 rounded-lg p-3.5 mb-4">
@@ -139,7 +153,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
           </div>
         </div>
       }
-      { currentShop.openStatus === ShopOpenStatus.OPEN && isCurrentNumberGreaterThanZero &&
+      { currentWaitingList?.waiting_list_numbers?.length > 0 &&
         <div className="flex flex-col">
           <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
             <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">07</div>
@@ -159,23 +173,24 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
             <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-amber-50 text-amber-700 ml-2">Présent</span>
             <div className="text-xs text-gray-400 ml-auto">12 min</div>
           </div>
+          { currentWaitingList.waiting_list_numbers.map((number, index) => (
+            <div key={index} className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
+              <div className={`w-8 h-8 rounded-full ${statusListNumberConfig[number.status]?.badgeColor} flex items-center justify-center text-sm font-semibold flex-shrink-0`}>{number.value}</div>
+              <div className="flex-1">
+                <div className="text-sm font-medium text-gray-900">Client #{number.deviceId}</div>
+                <div className="text-xs text-gray-400">{number?.device?.platform } · Tiré à {new Date(number.createdAt).toLocaleTimeString("fr-FR")}</div>
+              </div>
+              <span className={`text-xs font-semibold py-0.5 px-2.5 rounded-full ${statusListNumberConfig[number.status]?.className} ml-2`}>{statusListNumberConfig[number.status].label}</span>
+              <div className="text-xs text-gray-400 ml-auto">{number.value} min</div>
+            </div>
+          )) }
           <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
             <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-semibold flex-shrink-0">09</div>
             <div className="flex-1">
               <div className="text-sm font-medium text-gray-900">Anonyme · Device #B91C</div>
               <div className="text-xs text-gray-400">Android · Tiré à 10:28</div>
             </div>
-            <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-gray-200 text-gray-400 ml-2">En attente</span>
             <div className="text-xs text-gray-400 ml-auto">26 min</div>
-          </div>
-          <div className="flex items-center gap-3.5 py-3 px-[22px] hover:bg-gray-50 transition-colors duration-150 cursor-default">
-            <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-semibold flex-shrink-0">10</div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-900">Anonyme · Device #3D7F</div>
-              <div className="text-xs text-gray-400">Web · Tiré à 10:35</div>
-            </div>
-            <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-gray-200 text-gray-400 ml-2">En attente</span>
-            <div className="text-xs text-gray-400 ml-auto">33 min</div>
           </div>
         </div>
       }

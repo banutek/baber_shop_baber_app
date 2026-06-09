@@ -8,7 +8,7 @@ export interface IWaitingListDtoOut {
     id: string;
     current_number: number;
     session_date: Date;
-    status: string;
+    status: WaitingListStatusEnum;
     createdAt: Date;
     updatedAt: Date;
     barberShopId: string;

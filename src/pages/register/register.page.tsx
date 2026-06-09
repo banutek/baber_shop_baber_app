@@ -84,6 +84,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
     doRegisterNewUser(requestDatas, {
       onSuccess: (data) => {
         console.log('User registered successfully:', data.data.user)
+        navigate('/login')
       },
       onError: (error) => {
         console.error('Error registering user:', error)

@@ -1,6 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useShopStore } from '../../stores'
+import { useUpdateShopStatusHook } from '../../hooks'
+import { ShopOpenStatus } from '../../dto'
 
 export interface IProfileComponentProps {
   default_props?: boolean
@@ -12,10 +14,30 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const { currentUser } = useAuthStore()
   const { currentShop } = useShopStore()
 
+  const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
+
   const doLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
+    handleUpdateShopStatus(currentShop?.id)   
   }
+
+    const handleUpdateShopStatus = (shopId: string) => {
+      const requestDatas = {
+        shopId: shopId,
+        datas:{
+          openStatus: ShopOpenStatus.CLOSED
+        }
+      }
+      doUpdateShopStatus(requestDatas, {
+        onSuccess: (data) => {
+          console.log('response while updating::', data)
+            localStorage.removeItem('user');
+            navigate('/login');
+        },
+        onError: (error) => {
+          console.log('Shop status not updated', error)
+        }
+      })
+    }
 
 return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-slideUp">
