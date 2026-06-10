@@ -23,6 +23,12 @@ export interface INewWaitingListDtoIn {
     barberShopId: string;
 }
 
+export interface IUpdateWaitingListDtoIn {
+    current_number?: number;
+    status?: string;
+    barberShopId?: string;
+}
+
 export interface IUpdateWaitingListStatusDtoIn {
     status: WaitingListStatusEnum;
     openStatus: ShopOpenStatus;

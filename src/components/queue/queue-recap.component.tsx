@@ -147,7 +147,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
             </button>
             { isCurrentNumberGreaterThanZero &&
               <button className="flex-1 py-2.5 px-4 rounded-lg bg-red-50 text-red-500 font-sans text-sm font-semibold hover:bg-red-500 hover:text-white transition-all duration-180">
-                ⏭ &nbsp;Passer au suivant
+                ⏭ &nbsp;Passer au suivant 
               </button>
             }
           </div>
@@ -155,7 +155,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
       }
       { currentWaitingList?.waiting_list_numbers?.length > 0 &&
         <div className="flex flex-col">
-          <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
+          {/* <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
             <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">07</div>
             <div className="flex-1">
               <div className="text-sm font-medium text-gray-900">Anonyme · Device #4F2A</div>
@@ -163,8 +163,8 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
             </div>
             <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-green-50 text-green-600 ml-2">En chaise</span>
             <div className="text-xs text-gray-400 ml-auto">3 min</div>
-          </div>
-          <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
+          </div> */}
+          {/* <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
             <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-semibold flex-shrink-0">08</div>
             <div className="flex-1">
               <div className="text-sm font-medium text-gray-900">Youssef Amrani</div>
@@ -172,7 +172,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
             </div>
             <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-amber-50 text-amber-700 ml-2">Présent</span>
             <div className="text-xs text-gray-400 ml-auto">12 min</div>
-          </div>
+          </div> */}
           { currentWaitingList.waiting_list_numbers.map((number, index) => (
             <div key={index} className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
               <div className={`w-8 h-8 rounded-full ${statusListNumberConfig[number.status]?.badgeColor} flex items-center justify-center text-sm font-semibold flex-shrink-0`}>{number.value}</div>
@@ -184,14 +184,6 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
               <div className="text-xs text-gray-400 ml-auto">{number.value} min</div>
             </div>
           )) }
-          <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
-            <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-semibold flex-shrink-0">09</div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-900">Anonyme · Device #B91C</div>
-              <div className="text-xs text-gray-400">Android · Tiré à 10:28</div>
-            </div>
-            <div className="text-xs text-gray-400 ml-auto">26 min</div>
-          </div>
         </div>
       }
     </div>

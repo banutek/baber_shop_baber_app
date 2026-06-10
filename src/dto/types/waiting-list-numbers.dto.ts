@@ -17,3 +17,8 @@ export interface IWaitingListNumbersDtoOut {
     waiting_list_number_notification: any;
     waiting_list_number_scan_event: any;
 }
+
+
+export interface IUpdateWaitingListNumberStatusDtoIn {
+    status: WaitingListNumberStatus;
+}

@@ -3,8 +3,9 @@ import { ActivitySectionComponent, ProfileCardComponent, QueueRecapComponent, St
 import { AuthGuard } from '../../guards'
 import { useGetShopByManagerHook } from '../../hooks'
 import { useShopStore } from '../../stores'
-import type { IWaitingListNumbersDtoOut } from '../../dto'
+import { WaitingListNumberStatus, type IWaitingListNumbersDtoOut } from '../../dto'
 import { QRCodeSVG } from 'qrcode.react';
+import { useUpdateListNumberStatusHook, useUpdateWaitingListInfosHook } from '../../hooks';
 
 export interface IHomePageProps {
   default_props?: boolean
@@ -15,6 +16,8 @@ export interface IHomePageProps {
 export const HomePage: React.FC<IHomePageProps> = () => {
   const { setCurrentShop } = useShopStore()
   const { data } = useGetShopByManagerHook()
+  const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
+  const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
   
   // Modal state for next number
   const [showNextNumberModal, setShowNextNumberModal] = useState(false)
@@ -28,14 +31,48 @@ export const HomePage: React.FC<IHomePageProps> = () => {
   },[data])
   
   const handleOpenNextNumberModal = (number: IWaitingListNumbersDtoOut) => {
-    console.log({number})
     setNextNumber(number)
-    setShowNextNumberModal(true)
+        setShowNextNumberModal(true)
+    console.log({number})
   }
   
-  const handleCloseModal = () => {
-    setShowNextNumberModal(false)
-    setNextNumber(null)
+  const handleCloseModal = () => { 
+    const requestDatas = {
+      numberId: nextNumber.id,
+      datas:{
+        status: WaitingListNumberStatus.IN_PROGRESS
+      }
+    }
+    doUpdateListNumberStatus(requestDatas, {
+      onSuccess: (data) => {
+        handleUpdateWaitingListInfos()
+        setShowNextNumberModal(false)
+        setNextNumber(null)
+        console.log('List number status updated', data)
+      },
+      onError: (error) => {
+        console.log('List number status not updated', error)
+      }
+    })
+  }
+
+  const handleUpdateWaitingListInfos = () => {
+    const requestDatas = {
+      listId: nextNumber?.waitingListId,
+      datas:{
+        current_number: Number(nextNumber?.value)
+      }
+    }
+    doUpdateWaitingListInfos(requestDatas, {
+      onSuccess: (data) => {
+        setShowNextNumberModal(false)
+        setNextNumber(null)
+        console.log('Waiting list infos updated', data)
+      },
+      onError: (error) => {
+        console.log('Waiting list infos not updated', error)
+      }
+    })
   }
   
   const handleAbsent = () => {
@@ -69,7 +106,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
           {/* Main Content */}
           <main className="md:col-span-8 flex flex-col gap-5">
             <QueueRecapComponent onOpenNextNumberModal={handleOpenNextNumberModal} /> 
-            <ActivitySectionComponent /> 
+            <ActivitySectionComponent />  
           </main>
         </div>
         
