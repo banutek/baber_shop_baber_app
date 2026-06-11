@@ -31,5 +31,5 @@ export interface IUpdateWaitingListDtoIn {
 
 export interface IUpdateWaitingListStatusDtoIn {
     status: WaitingListStatusEnum;
-    openStatus: ShopOpenStatus;
+    // openStatus: ShopOpenStatus;
 }

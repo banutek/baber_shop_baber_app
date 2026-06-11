@@ -32,4 +32,10 @@ export const statusListNumberConfig: Record<WaitingListNumberStatus, { label: st
         dotColor: 'bg-green-500',
         badgeColor: 'bg-amber-100 text-white',
     },
+    [WaitingListNumberStatus.MISSING]: {
+        label: 'Absent',
+        className: 'text-red-400 bg-red-500/10',
+        dotColor: 'bg-red-500',
+        badgeColor: 'bg-red-100 text-white',
+    },
 }

@@ -14,7 +14,7 @@ export interface IHomePageProps {
 
 
 export const HomePage: React.FC<IHomePageProps> = () => {
-  const { setCurrentShop } = useShopStore()
+  const { setCurrentShop, setCurrentWaitingList } = useShopStore()
   const { data } = useGetShopByManagerHook()
   const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
   const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
@@ -25,30 +25,30 @@ export const HomePage: React.FC<IHomePageProps> = () => {
 
   useEffect(() => {
     if(data){
-      console.log('the response::::', data.data.shop)
       setCurrentShop(data.data.shop)
     }
   },[data])
   
   const handleOpenNextNumberModal = (number: IWaitingListNumbersDtoOut) => {
     setNextNumber(number)
-        setShowNextNumberModal(true)
-    console.log({number})
+    setShowNextNumberModal(true)
   }
   
-  const handleCloseModal = () => { 
+  const handleUpdateCurrentNumberStatus = (statusToHave: WaitingListNumberStatus) => { 
     const requestDatas = {
       numberId: nextNumber.id,
       datas:{
-        status: WaitingListNumberStatus.IN_PROGRESS
+        status: statusToHave
       }
     }
     doUpdateListNumberStatus(requestDatas, {
       onSuccess: (data) => {
-        handleUpdateWaitingListInfos()
-        setShowNextNumberModal(false)
-        setNextNumber(null)
-        console.log('List number status updated', data)
+        if(data?.data?.waitingListNumber){
+          if(statusToHave === WaitingListNumberStatus.IN_PROGRESS){
+            handleTakeNextNumber()
+          }
+          doCloseModal()
+        }
       },
       onError: (error) => {
         console.log('List number status not updated', error)
@@ -56,7 +56,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
     })
   }
 
-  const handleUpdateWaitingListInfos = () => {
+  const handleTakeNextNumber = () => {
     const requestDatas = {
       listId: nextNumber?.waitingListId,
       datas:{
@@ -67,18 +67,22 @@ export const HomePage: React.FC<IHomePageProps> = () => {
       onSuccess: (data) => {
         setShowNextNumberModal(false)
         setNextNumber(null)
-        console.log('Waiting list infos updated', data)
+        setCurrentWaitingList(data?.data?.waitingList)
       },
       onError: (error) => {
         console.log('Waiting list infos not updated', error)
       }
     })
   }
+
+  const doCloseModal = () => {
+    setShowNextNumberModal(false)
+    setNextNumber(null)
+  }
   
   const handleAbsent = () => {
+    handleUpdateCurrentNumberStatus(WaitingListNumberStatus.MISSING)
     setShowNextNumberModal(false)
-    // TODO: Marquer le numéro comme absent
-    console.log('Client absent:', nextNumber)
   }
   
   return (
@@ -106,7 +110,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
           {/* Main Content */}
           <main className="md:col-span-8 flex flex-col gap-5">
             <QueueRecapComponent onOpenNextNumberModal={handleOpenNextNumberModal} /> 
-            <ActivitySectionComponent />  
+            <ActivitySectionComponent />   
           </main>
         </div>
         
@@ -118,7 +122,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-serif text-xl text-gray-900">Prochain numéro</h3>
                 <button 
-                  onClick={handleCloseModal}
+                  onClick={doCloseModal}
                   className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors"
                 >
                   ×
@@ -159,7 +163,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
                   🚫 Absent
                 </button>
                 <button 
-                  onClick={handleCloseModal}
+                  onClick={() => handleUpdateCurrentNumberStatus(WaitingListNumberStatus.IN_PROGRESS)}
                   className="flex-1 py-3 px-4 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors"
                 >
                   ✅ Servir
