@@ -1,5 +1,6 @@
-import React from 'react'
+import type React from 'react'
 import { Navigate } from 'react-router-dom'
+
 import type { ILoginUserResponse } from '../dto'
 
 export interface IGuestGuardProps {
@@ -7,11 +8,11 @@ export interface IGuestGuardProps {
 }
 
 export const GuestGuard: React.FC<IGuestGuardProps> = ({ children }) => {
-    const connectedUser:ILoginUserResponse = JSON.parse(localStorage.getItem('user') as string)
+  const connectedUser: ILoginUserResponse = JSON.parse(localStorage.getItem('user') as string)
 
-    console.log(({connectedUser}))
+  console.log({ connectedUser })
 
-  if(connectedUser) {
+  if (connectedUser) {
     return <Navigate to="/" />
   }
   return children

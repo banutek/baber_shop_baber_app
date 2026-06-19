@@ -3,17 +3,25 @@ import React from 'react'
 export interface IQueueCardComponentProps {
   default_props?: boolean
   default_method?: () => void
-   number: string; 
-   name: string; 
-   meta: string[]; 
-   badge: string; 
-   badgeType: string; 
-   elapsed: string; 
-   isActive?: boolean
+  number: string
+  name: string
+  meta: string[]
+  badge: string
+  badgeType: string
+  elapsed: string
+  isActive?: boolean
 }
 
-export const QueueCardComponent: React.FC<IQueueCardComponentProps> = ({ number, name, meta, badge, badgeType, elapsed, isActive }) => {
- const getSideColor = () => {
+export const QueueCardComponent: React.FC<IQueueCardComponentProps> = ({
+  number,
+  name,
+  meta,
+  badge,
+  badgeType,
+  elapsed,
+  isActive,
+}) => {
+  const getSideColor = () => {
     if (badgeType === 'amber') return 'bg-amber-600'
     if (badgeType === 'green') return 'bg-green-500'
     if (badgeType === 'red') return 'bg-red-500'
@@ -40,12 +48,16 @@ export const QueueCardComponent: React.FC<IQueueCardComponentProps> = ({ number,
 
   return (
     <div className="queue-card bg-white rounded-2xl shadow-lg overflow-hidden flex items-stretch transform hover:-translate-y-0.5 transition-all duration-180 hover:shadow-xl cursor-default animate-fadeUp">
-      <div className={`w-1.5 flex-shrink-0 ${getSideColor()}`}></div>
+      <div className={`w-1.5 flex-shrink-0 ${getSideColor()}`} />
       <div className="flex items-center gap-4 p-4 flex-1">
-        <div className={`font-serif text-2xl ${isActive ? 'text-amber-700' : 'text-gray-400'} leading-none min-w-[42px]`}>
+        <div
+          className={`font-serif text-2xl ${isActive ? 'text-amber-700' : 'text-gray-400'} leading-none min-w-[42px]`}
+        >
           {number}
         </div>
-        <div className={`w-10 h-10 rounded-full ${getAvatarType()} flex items-center justify-center text-base flex-shrink-0 font-semibold`}>
+        <div
+          className={`w-10 h-10 rounded-full ${getAvatarType()} flex items-center justify-center text-base flex-shrink-0 font-semibold`}
+        >
           {getAvatarText()}
         </div>
         <div className="flex-1">
@@ -54,13 +66,17 @@ export const QueueCardComponent: React.FC<IQueueCardComponentProps> = ({ number,
             {meta.map((item, index) => (
               <React.Fragment key={index}>
                 <span>{item}</span>
-                {index < meta.length - 1 && <div className="w-0.5 h-0.5 rounded-full bg-gray-400"></div>}
+                {index < meta.length - 1 && (
+                  <div className="w-0.5 h-0.5 rounded-full bg-gray-400" />
+                )}
               </React.Fragment>
             ))}
           </div>
         </div>
         <div className="flex flex-col items-end gap-1.5">
-          <span className={`text-xs font-semibold py-1 px-2.5 rounded-full whitespace-nowrap ${getBadgeColor()}`}>
+          <span
+            className={`text-xs font-semibold py-1 px-2.5 rounded-full whitespace-nowrap ${getBadgeColor()}`}
+          >
             {badge}
           </span>
           <span className="text-xs text-gray-400">{elapsed}</span>

@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 export interface IHistoryItemComponentProps {
   icon: string
@@ -9,7 +9,14 @@ export interface IHistoryItemComponentProps {
   durationType?: string
 }
 
-export const HistoryItemComponent: React.FC<IHistoryItemComponentProps> = ({icon, iconType, text, time, duration, durationType}) => {
+export const HistoryItemComponent: React.FC<IHistoryItemComponentProps> = ({
+  icon,
+  iconType,
+  text,
+  time,
+  duration,
+  durationType,
+}) => {
   const getIconBg = () => {
     if (iconType === 'green') return 'bg-green-50'
     if (iconType === 'red') return 'bg-red-50'
@@ -24,7 +31,9 @@ export const HistoryItemComponent: React.FC<IHistoryItemComponentProps> = ({icon
 
   return (
     <div className="flex items-center gap-3.5 p-3.5 bg-white rounded-lg shadow-lg animate-fadeUp">
-      <div className={`w-8 h-8 rounded-full ${getIconBg()} flex items-center justify-center text-sm flex-shrink-0`}>
+      <div
+        className={`w-8 h-8 rounded-full ${getIconBg()} flex items-center justify-center text-sm flex-shrink-0`}
+      >
         {icon}
       </div>
       <div className="flex-1 text-xs text-gray-500 leading-relaxed">

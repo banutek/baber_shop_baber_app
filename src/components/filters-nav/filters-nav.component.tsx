@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 export interface IFiltersNavComponentProps {
   default_props?: boolean
@@ -6,7 +6,7 @@ export interface IFiltersNavComponentProps {
 }
 
 export const FiltersNavComponent: React.FC<IFiltersNavComponentProps> = () => {
-   return (
+  return (
     <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
       <div className="px-4 py-1.5 rounded-full border-[1.5px] border-gray-900 bg-gray-900 text-white text-xs font-medium cursor-pointer whitespace-nowrap transition-all duration-180">
         Tous (17)

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+
 import type { IBarberShopDtoOut, IWaitingListDtoOut } from '../../dto'
 
 type ShopStore = {
@@ -13,5 +14,6 @@ export const useShopStore = create<ShopStore>()((set) => ({
   currentWaitingList: null,
 
   setCurrentShop: (shop: IBarberShopDtoOut | null) => set(() => ({ currentShop: shop })),
-  setCurrentWaitingList: (waitingList: IWaitingListDtoOut | null) => set(() => ({ currentWaitingList: waitingList })),
+  setCurrentWaitingList: (waitingList: IWaitingListDtoOut | null) =>
+    set(() => ({ currentWaitingList: waitingList })),
 }))

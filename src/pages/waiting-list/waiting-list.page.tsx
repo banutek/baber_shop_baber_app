@@ -1,12 +1,19 @@
-import React from 'react'
-import { CurrentBannerComponent, FiltersNavComponent, HistoryListComponent, QueueGridComponent, StatsRowComponent, TopBarComponent } from '../../components'
+import type React from 'react'
+
+import {
+  CurrentBannerComponent,
+  FiltersNavComponent,
+  HistoryListComponent,
+  QueueGridComponent,
+  StatsRowComponent,
+  TopBarComponent,
+} from '../../components'
 import { AuthGuard } from '../../guards'
 
 export interface IWaitingListProps {
   default_props?: boolean
   default_method?: () => void
 }
-
 
 export const WaitingListPage: React.FC<IWaitingListProps> = () => {
   return (
@@ -24,9 +31,9 @@ export const WaitingListPage: React.FC<IWaitingListProps> = () => {
             opacity: 1;
           }
         `}</style>
-        
+
         <TopBarComponent title="File d'attente complète" />
-        
+
         <div className="max-w-4xl mx-auto px-5 py-6">
           <StatsRowComponent />
           <FiltersNavComponent />

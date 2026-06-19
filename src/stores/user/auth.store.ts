@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+
 import type { ILoginUserResponse } from '../../dto'
 
 type AuthStore = {

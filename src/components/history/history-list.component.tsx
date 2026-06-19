@@ -1,4 +1,5 @@
-import React from 'react'
+import type React from 'react'
+
 import { HistoryItemComponent } from './history-item.component'
 
 export interface IHistoryListComponentProps {
@@ -7,9 +8,11 @@ export interface IHistoryListComponentProps {
 }
 
 export const HistoryListComponent: React.FC<IHistoryListComponentProps> = () => {
- return (
+  return (
     <>
-      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5 pl-0.5">Historique · 13 passages</div>
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5 pl-0.5">
+        Historique · 13 passages
+      </div>
       <div className="flex flex-col gap-0">
         <HistoryItemComponent
           icon="⏭"

@@ -1,8 +1,15 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import { CreateNewShop, HistoryPage, HomePage, LoginPage, RegisterPage, WaitingListPage } from './pages'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+
+import {
+  CreateNewShop,
+  HistoryPage,
+  HomePage,
+  LoginPage,
+  RegisterPage,
+  WaitingListPage,
+} from './pages'
 
 function App() {
-
   return (
     <Router>
       <Routes>

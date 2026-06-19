@@ -1,5 +1,5 @@
-export * from './url'
 export * from './auth/auth.service'
 export * from './shop/shop.service'
+export * from './url'
 export * from './waiting-list/waiting-list.service'
 export * from './waiting-list-number/waiting-list-number.service'

@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import type React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 export interface IConfirmTooltipProps {
@@ -122,9 +123,7 @@ export const ConfirmTooltip: React.FC<IConfirmTooltipProps> = ({
             style={{ top: position.top, left: position.left }}
           >
             <div className="bg-gray-900 text-white rounded-xl px-4 py-3 shadow-2xl min-w-[200px] max-w-[280px] max-sm:max-w-[calc(100vw-16px)]">
-              <p className="text-xs leading-relaxed mb-3 text-center text-gray-200">
-                {message}
-              </p>
+              <p className="text-xs leading-relaxed mb-3 text-center text-gray-200">{message}</p>
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={() => setShowConfirm(false)}
@@ -150,9 +149,8 @@ export const ConfirmTooltip: React.FC<IConfirmTooltipProps> = ({
               style={{ left: arrowLeft, transform: 'translateX(-50%)' }}
             />
           </div>,
-          document.body
-        )
-      }
+          document.body,
+        )}
     </div>
   )
 }

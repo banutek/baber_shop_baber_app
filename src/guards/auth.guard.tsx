@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react'
+import type React from 'react'
+import { useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
+
 import type { ILoginUserResponse } from '../dto'
 import { useAuthStore } from '../stores'
 
@@ -9,11 +11,11 @@ export interface IAuthGuardProps {
 
 export const AuthGuard: React.FC<IAuthGuardProps> = ({ children }) => {
   const { setCurrentUser, currentUser } = useAuthStore()
-    const { pathname } = useLocation()
-    const userStr = localStorage.getItem('user')
-    const connectedUser:ILoginUserResponse = userStr ? JSON.parse(userStr) : null
+  const { pathname } = useLocation()
+  const userStr = localStorage.getItem('user')
+  const connectedUser: ILoginUserResponse = userStr ? JSON.parse(userStr) : null
 
-    console.log({connectedUser, pathname})
+  console.log({ connectedUser, pathname })
 
   // if(!connectedUser) {
   //   return <Navigate to="/login" />

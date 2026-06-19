@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useRegisterNewUserHook } from '../../hooks'  
-import { RoleEnum, type INewUserDtoIn } from '../../dto'
-import { GuestGuard } from '../../guards'
+import type React from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { type INewUserDtoIn, RoleEnum } from '../../dto'
+import { GuestGuard } from '../../guards'
+import { useRegisterNewUserHook } from '../../hooks'
 
 export interface IRegisterPageProps {
   default_props?: boolean
@@ -48,9 +50,9 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
     address: '',
     password: '',
     confirmPassword: '',
-    agreeTerms: false
+    agreeTerms: false,
   })
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const { mutate: doRegisterNewUser } = useRegisterNewUserHook()
@@ -79,7 +81,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
       password: formData.password,
       phone: formData.phone,
       address: formData.address,
-      role: RoleEnum.BARBER
+      role: RoleEnum.BARBER,
     }
     doRegisterNewUser(requestDatas, {
       onSuccess: (data) => {
@@ -88,7 +90,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
       },
       onError: (error) => {
         console.error('Error registering user:', error)
-      }
+      },
     })
   }
 
@@ -119,16 +121,21 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   >
                     <span className="text-xl mr-2">{selectedCountry.flag}</span>
                     <span className="text-gray-400 text-sm">{selectedCountry.dialCode}</span>
-                    <svg 
+                    <svg
                       className={`w-4 h-4 ml-2 text-gray-400 transition-transform ${showCountryDropdown ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
-                  
+
                   {/* Dropdown Menu */}
                   {showCountryDropdown && (
                     <div className="absolute top-full left-0 z-[9999] mt-1 w-64 bg-gray-800 border border-gray-700 rounded-xl shadow-xl max-h-64 overflow-y-auto">
@@ -152,39 +159,38 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                     </div>
                   )}
                 </div>
-                
 
                 {/* Phone Input */}
                 <input
                   type="tel"
                   placeholder="Phone number"
                   value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="flex-1 bg-transparent border-none p-4 text-white text-base outline-none"
                 />
               </div>
             </div>
 
-                {/* First name Input */}
+            {/* First name Input */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Prénom"
                 value={formData.first_name}
-                onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-              
-                {/* Last name Input */}
+
+            {/* Last name Input */}
             <div className="mb-5">
-                <input
-                  type="text"
-                  placeholder="Nom de famille"
-                  value={formData.last_name}
-                  onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
-                />
+              <input
+                type="text"
+                placeholder="Nom de famille"
+                value={formData.last_name}
+                onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+              />
             </div>
 
             {/* Email Input */}
@@ -193,18 +199,18 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="email"
                 placeholder="Email address"
                 value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-      
+
             {/* Address Input */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Address"
                 value={formData.address}
-                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
@@ -216,7 +222,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full bg-transparent border-none p-4 pr-12 text-white text-base outline-none box-border"
                 />
                 <button
@@ -236,7 +242,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm password"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   className="w-full bg-transparent border-none p-4 pr-12 text-white text-base outline-none box-border"
                 />
                 <button
@@ -255,7 +261,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 <input
                   type="checkbox"
                   checked={formData.agreeTerms}
-                  onChange={(e) => setFormData({...formData, agreeTerms: e.target.checked})}
+                  onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
                   className="mr-3 mt-0.5 w-4 h-4 accent-purple-500"
                 />
                 <span>
@@ -302,7 +308,10 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
           {/* Login Link */}
           <div className="text-center text-gray-400 text-sm">
             Already have an account?{' '}
-            <button onClick={() => navigate('/login')} className="bg-none border-none text-purple-500 text-sm cursor-pointer underline p-0">
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-none border-none text-purple-500 text-sm cursor-pointer underline p-0"
+            >
               Login
             </button>
           </div>

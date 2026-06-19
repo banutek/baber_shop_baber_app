@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useCreateNewShopHook } from '../../hooks'  
+import type React from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import { type INewBarberShopDtoIn } from '../../dto'
 import { AuthGuard } from '../../guards'
-import { useNavigate } from 'react-router-dom'
+import { useCreateNewShopHook } from '../../hooks'
 
 export interface ICreateNewShopProps {
   default_props?: boolean
@@ -44,11 +46,11 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
     phone: '',
     latitude: undefined,
     longitude: undefined,
-    email: ''
+    email: '',
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -73,7 +75,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
       const reader = new FileReader()
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string)
-        setFormDatas({...formDatas, profileImage: file})
+        setFormDatas({ ...formDatas, profileImage: file })
       }
       reader.readAsDataURL(file)
     }
@@ -111,7 +113,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
 
   const removeImage = () => {
     setImagePreview(null)
-    setFormDatas({...formDatas, profileImage: undefined})
+    setFormDatas({ ...formDatas, profileImage: undefined })
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -119,29 +121,29 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Créer FormData pour l'envoi du fichier
     const formDataToSend = new FormData()
     formDataToSend.append('name', formDatas.name)
     formDataToSend.append('address', formDatas.address)
     formDataToSend.append('phone', formDatas.phone)
-    
+
     if (formDatas.email) {
       formDataToSend.append('email', formDatas.email)
     }
-    
+
     if (formDatas.latitude) {
       formDataToSend.append('latitude', formDatas.latitude.toString())
     }
-    
+
     if (formDatas.longitude) {
       formDataToSend.append('longitude', formDatas.longitude.toString())
     }
-    
+
     if (formDatas.profileImage) {
       formDataToSend.append('profileImage', formDatas.profileImage)
     }
-    
+
     console.log('Form submitted with FormData:', formDataToSend)
     doCreateNewShop(formDataToSend, {
       onSuccess: (data) => {
@@ -153,7 +155,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
       },
       onError: (error) => {
         console.error('Error creating shop:', error)
-      }
+      },
     })
   }
 
@@ -183,16 +185,21 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                   >
                     <span className="text-xl mr-2">{selectedCountry.flag}</span>
                     <span className="text-gray-400 text-sm">{selectedCountry.dialCode}</span>
-                    <svg 
+                    <svg
                       className={`w-4 h-4 ml-2 text-gray-400 transition-transform ${showCountryDropdown ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
-                  
+
                   {/* Dropdown Menu */}
                   {showCountryDropdown && (
                     <div className="absolute top-full left-0 z-[9999] mt-1 w-64 bg-gray-800 border border-gray-700 rounded-xl shadow-xl max-h-64 overflow-y-auto">
@@ -216,26 +223,25 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                     </div>
                   )}
                 </div>
-                
 
                 {/* Phone Input */}
                 <input
                   type="tel"
                   placeholder="Phone number"
                   value={formDatas.phone}
-                  onChange={(e) => setFormDatas({...formDatas, phone: e.target.value})}
+                  onChange={(e) => setFormDatas({ ...formDatas, phone: e.target.value })}
                   className="flex-1 bg-transparent border-none p-4 text-white text-base outline-none"
                 />
               </div>
             </div>
 
-                {/* Barbershop name Input */}
+            {/* Barbershop name Input */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Nom du salon"
                 value={formDatas.name}
-                onChange={(e) => setFormDatas({...formDatas, name: e.target.value})}
+                onChange={(e) => setFormDatas({ ...formDatas, name: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
@@ -246,50 +252,50 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 type="email"
                 placeholder="Email address"
                 value={formDatas.email}
-                onChange={(e) => setFormDatas({...formDatas, email: e.target.value})}
+                onChange={(e) => setFormDatas({ ...formDatas, email: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-      
+
             {/* Address Input */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Address"
                 value={formDatas.address}
-                onChange={(e) => setFormDatas({...formDatas, address: e.target.value})}
+                onChange={(e) => setFormDatas({ ...formDatas, address: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-         
+
             {/* Latitude Input */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Latitude"
                 value={formDatas.latitude || ''}
-                onChange={(e) => setFormDatas({...formDatas, latitude: Number(e.target.value)})}
+                onChange={(e) => setFormDatas({ ...formDatas, latitude: Number(e.target.value) })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-         
+
             {/* Longitude Input */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Longitude"
                 value={formDatas.longitude || ''}
-                onChange={(e) => setFormDatas({...formDatas, longitude: Number(e.target.value)})}
+                onChange={(e) => setFormDatas({ ...formDatas, longitude: Number(e.target.value) })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
             </div>
-        
+
             {/* Profile Image Upload */}
             <div className="mb-5">
               <div
                 className={`w-full bg-gray-800 border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                  isDragging 
-                    ? 'border-purple-500 bg-purple-900/20' 
+                  isDragging
+                    ? 'border-purple-500 bg-purple-900/20'
                     : 'border-gray-700 hover:border-gray-600'
                 }`}
                 onDragOver={handleDragOver}
@@ -304,12 +310,12 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                   onChange={handleFileSelect}
                   className="hidden"
                 />
-                
+
                 {imagePreview ? (
                   <div className="relative">
-                    <img 
-                      src={imagePreview} 
-                      alt="Profile preview" 
+                    <img
+                      src={imagePreview}
+                      alt="Profile preview"
                       className="w-32 h-32 mx-auto rounded-lg object-cover mb-3"
                     />
                     <button
@@ -322,18 +328,30 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                     >
                       ×
                     </button>
-                    <p className="text-gray-400 text-sm">Cliquez ou glissez pour remplacer l'image</p>
+                    <p className="text-gray-400 text-sm">
+                      Cliquez ou glissez pour remplacer l&rsquo;image
+                    </p>
                   </div>
                 ) : (
                   <div>
                     <div className="w-16 h-16 mx-auto mb-3 bg-gray-700 rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      <svg
+                        className="w-8 h-8 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        />
                       </svg>
                     </div>
                     <p className="text-gray-400 text-sm mb-1">Glissez-déposez une image ici</p>
                     <p className="text-gray-500 text-xs">ou cliquez pour sélectionner</p>
-                    <p className="text-gray-600 text-xs mt-2">PNG, JPG, GIF jusqu'à 10MB</p>
+                    <p className="text-gray-600 text-xs mt-2">PNG, JPG, GIF jusqu&rsquo;à 10MB</p>
                   </div>
                 )}
               </div>
@@ -355,11 +373,13 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
             <div className="flex-1 h-px bg-gray-700" />
           </div>
 
-
           {/* Login Link */}
           <div className="text-center text-gray-400 text-sm">
             Already have an account?{' '}
-            <button onClick={() => navigate('/login')} className="bg-none border-none text-purple-500 text-sm cursor-pointer underline p-0">
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-none border-none text-purple-500 text-sm cursor-pointer underline p-0"
+            >
               Login
             </button>
           </div>

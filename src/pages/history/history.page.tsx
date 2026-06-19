@@ -1,5 +1,11 @@
-import React from 'react'
-import { CurrentBannerComponent,  HistoryListComponent, StatsRowComponent, TopBarComponent } from '../../components'
+import type React from 'react'
+
+import {
+  CurrentBannerComponent,
+  HistoryListComponent,
+  StatsRowComponent,
+  TopBarComponent,
+} from '../../components'
 import { AuthGuard } from '../../guards'
 
 export interface IHistoryPageProps {
@@ -23,9 +29,9 @@ export const HistoryPage: React.FC<IHistoryPageProps> = () => {
             opacity: 1;
           }
         `}</style>
-        
+
         <TopBarComponent title="Historique" />
-        
+
         <div className="max-w-4xl mx-auto px-5 py-6">
           <StatsRowComponent />
           <CurrentBannerComponent />
@@ -33,5 +39,5 @@ export const HistoryPage: React.FC<IHistoryPageProps> = () => {
         </div>
       </div>
     </AuthGuard>
-    )
+  )
 }
