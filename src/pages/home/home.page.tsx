@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ActivitySectionComponent, ProfileCardComponent, QueueRecapComponent, StatsRowComponent, TopBarComponent } from '../../components'
+import { ActivitySectionComponent, ConfirmTooltip, ProfileCardComponent, QueueRecapComponent, StatsRowComponent, TopBarComponent } from '../../components'
 import { AuthGuard } from '../../guards'
 import { useGetShopByManagerHook, type IUpdateListNumberStatusHookParams } from '../../hooks'
 import { useShopStore } from '../../stores'
@@ -156,18 +156,16 @@ export const HomePage: React.FC<IHomePageProps> = () => {
 
               {/* Boutons */}
               <div className="flex gap-3">
-                <button 
-                  onClick={handleAbsent}
-                  className="flex-1 py-3 px-4 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors"
-                >
-                  🚫 Absent
-                </button>
-                <button 
-                  onClick={() => handleUpdateCurrentNumberStatus(WaitingListNumberStatus.IN_PROGRESS)}
-                  className="flex-1 py-3 px-4 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors"
-                >
-                  ✅ Servir
-                </button>
+                <ConfirmTooltip onConfirm={handleAbsent} message="Êtes-vous sûr de vouloir marquer ce client comme absent ?" className="flex-1">
+                  <button className="flex-1 py-3 px-4 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors">
+                    🚫 Absent
+                  </button>
+                </ConfirmTooltip>
+                <ConfirmTooltip onConfirm={() => handleUpdateCurrentNumberStatus(WaitingListNumberStatus.IN_PROGRESS)} message="Êtes-vous sûr de vouloir servir ce client ?" className="flex-1">
+                  <button className="flex-1 py-3 px-4 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors">
+                    ✅ Servir
+                  </button>
+                </ConfirmTooltip>
               </div>
             </div>
           </div>

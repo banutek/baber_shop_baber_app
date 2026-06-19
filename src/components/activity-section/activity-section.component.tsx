@@ -11,11 +11,12 @@ export interface IActivitySectionComponentProps {
 export const ActivitySectionComponent: React.FC<IActivitySectionComponentProps> = () => {
   const navigate = useNavigate()
    const { currentShop, currentWaitingList } = useShopStore()
-    const isOpen = currentShop?.barber_shop_waiting_list?.status === WaitingListStatusEnum.OPEN
-    const isCurrentNumberGreaterThanZero = currentWaitingList?.current_number > 0
+   const currentList = currentShop?.barber_shop_waiting_list?.find((_) => new Date(_.createdAt).getDay() === new Date().getDay())
+    const isOpen = currentList?.status === WaitingListStatusEnum.OPEN
+    const isCurrentNumberGreaterThanZero = currentWaitingList?.current_number && currentWaitingList.current_number > 0
   
 return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-slideUp" style={{ animationDelay: '0.14s' }}>
+    <div className="bg-white rounded-2xl shadow-lg animate-slideUp" style={{ animationDelay: '0.14s' }}>
       <div className="flex items-center justify-between px-[22px] py-[18px] border-b border-gray-200">
         <div className="font-serif text-base text-gray-900">Activité récente</div>
         { isOpen ?
