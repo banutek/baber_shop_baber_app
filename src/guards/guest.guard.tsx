@@ -7,7 +7,7 @@ export interface IGuestGuardProps {
 }
 
 export const GuestGuard: React.FC<IGuestGuardProps> = ({ children }) => {
-    const connectedUser:ILoginUserResponse = JSON.parse(localStorage.getItem('user'))
+    const connectedUser:ILoginUserResponse = JSON.parse(localStorage.getItem('user') as string)
 
     console.log(({connectedUser}))
 

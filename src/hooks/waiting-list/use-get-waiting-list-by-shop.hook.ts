@@ -14,5 +14,6 @@ export const useGetWaitingListByShopHook = (shopId: string) => {
         },
         retry: 1,
         enabled: !!shopId && !!currentShop?.barber_shop_waiting_list,
+        refetchOnWindowFocus: true
     })
 }

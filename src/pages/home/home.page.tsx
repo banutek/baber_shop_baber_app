@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivitySectionComponent, ProfileCardComponent, QueueRecapComponent, StatsRowComponent, TopBarComponent } from '../../components'
 import { AuthGuard } from '../../guards'
-import { useGetShopByManagerHook } from '../../hooks'
+import { useGetShopByManagerHook, type IUpdateListNumberStatusHookParams } from '../../hooks'
 import { useShopStore } from '../../stores'
 import { WaitingListNumberStatus, type IWaitingListNumbersDtoOut } from '../../dto'
 import { QRCodeSVG } from 'qrcode.react';
@@ -36,12 +36,12 @@ export const HomePage: React.FC<IHomePageProps> = () => {
   
   const handleUpdateCurrentNumberStatus = (statusToHave: WaitingListNumberStatus) => { 
     const requestDatas = {
-      numberId: nextNumber.id,
+      numberId: nextNumber?.id,
       datas:{
         status: statusToHave
       }
     }
-    doUpdateListNumberStatus(requestDatas, {
+    doUpdateListNumberStatus(requestDatas as IUpdateListNumberStatusHookParams, {
       onSuccess: (data) => {
         if(data?.data?.waitingListNumber){
           if(statusToHave === WaitingListNumberStatus.IN_PROGRESS){
@@ -58,7 +58,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
 
   const handleTakeNextNumber = () => {
     const requestDatas = {
-      listId: nextNumber?.waitingListId,
+      listId: nextNumber?.waitingListId!,
       datas:{
         current_number: Number(nextNumber?.value)
       }
@@ -143,7 +143,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
               <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <div className="flex justify-center">
                   <QRCodeSVG
-                    value={'nextNumber.barcode'}   // "QF-007-A3F9C12D4E5B6F7A"
+                    value={nextNumber.barcode}   // "QF-007-A3F9C12D4E5B6F7A"
                     size={350}
                     level="H"
                     marginSize={2}

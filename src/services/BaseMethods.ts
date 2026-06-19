@@ -16,14 +16,12 @@ class BaseMethods {
   static getHeadersAuth = (isFile?: boolean) => {
     const headers = BaseMethods.getHeaders(isFile)
     const token = localStorage.getItem('user')
-      ? JSON.parse(localStorage.getItem('user')).access_token
+      ? JSON.parse(localStorage.getItem('user') as string).access_token
       : ''
     const copyHeaders = {
       Authorization: `Bearer ${token}`,
-      // Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ5bFJqZzlzT19POFdMUmJfXzhBQ0szYVN5b1AwaXh3aTNvVEFfeWswelk0In0.eyJleHAiOjE3NDE5NTAyNjgsImlhdCI6MTc0MTk0NjY2OCwianRpIjoiODk1NmMwNmItZTFkOC00NWNhLTljZTYtZTAyYzgyNzQzOWMzIiwiaXNzIjoiaHR0cHM6Ly8xMzcuMTM1LjIwMS4xOTY6ODQ0My9yZWFsbXMvZnNlIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjRhNmIxNTIxLTMxZTgtNDU5NS04NDIzLWE2ZTA1NmI0OWMxNiIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZzZS1leHRlcm5hbCIsInNpZCI6ImM2NTg4ZmQwLTVlNjQtNGFhNy1iYTdjLThmNDliNGE1YTM3ZCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtZnNlIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInVuaXR5IjoidW5pdHkxMjM0NTYiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJBaG1lZCBOYWNlciIsIklOUEUiOiIwMDAwMDAwMDEiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhLmtham91aTEyMzQiLCJnaXZlbl9uYW1lIjoiQWhtZWQiLCJjYXRlZ29yeSI6ImNhdGVnb3J5MTIzIiwiZmFtaWx5X25hbWUiOiJOYWNlciIsImVtYWlsIjoibmFjZXIua0BnbWFpbC5jb20ifQ.4Les8z73cIHAJ2RPp9YtoMgCL3p5qXCmSR-hyIgC-UWPGxurhkY05g7Gq-N7n-CDvOQjfbcpPhcjui4AzEXZMUxNn_JqFDxYk_PtpDDMqDjsoXwHhAOTpXqIQ57ak5itxSv9wJvQYsItSrTpFHKEgM3fVLzvi4oRLIxby77LbMxJzYKB6WvjNmpxhmUEDvjRGCSepBPjukla4tiyo7XryhaSIzbh6vyyJQEmxtWHBgPuyNEN-dHGDdz1rVkHgSEOyGCObySw6-jIGw5WB9l6wIEhYGtJaMK3kExJ6_WyYE95s5-CScTKOtCHEVtT7w3Pv3nsDb0-spusb_zMFqrXMw`,
       ...headers,
     }
-    // headers.append('Authorization', `Bearer ${JSON.parse(token)}`);
     return copyHeaders
   }
 

@@ -16,14 +16,15 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
   const { CREATED, PENDING, NEXT, IN_PROGRESS, COMPLETED, MISSING } = WaitingListNumberStatus
   
   const { currentShop, setCurrentShop, currentWaitingList, setCurrentWaitingList } = useShopStore()
-  const isCurrentNumberGreaterThanZero = currentWaitingList?.current_number > 0
-  const currentNumber = currentWaitingList?.waiting_list_numbers.find((_) => Number(_.value )=== currentWaitingList?.current_number)
+  const isCurrentNumberGreaterThanZero = (currentWaitingList?.current_number ?? 0) > 0
+  const currentNumber = currentWaitingList?.waiting_list_numbers?.find((_) => Number(_.value )=== currentWaitingList?.current_number)
   const currentDevice = currentNumber?.deviceId
+  const firstNumberStatus = currentWaitingList?.waiting_list_numbers[0]?.status
 
   const { mutate: doCreateNewWaitingList } = useCreateNewWaitingListHook()
   const { mutate: doUpdateWaitingListStatus } = useUpdateWaitingListStatusHook()
   const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
-  const { data: waitingListData } = useGetWaitingListByShopHook(currentShop?.id)
+  const { data: waitingListData } = useGetWaitingListByShopHook(currentShop?.id ?? '')
   const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
   },[waitingListData])
 
   const handleOpenWaitingList = () => {
+    if (!currentShop?.id) return
     const currentList = currentShop.barber_shop_waiting_list.find((_) => new Date(_.createdAt).getDay() === new Date().getDay())
     if(currentList){
       const requestDatas = {
@@ -44,7 +46,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
       doUpdateWaitingListStatus(requestDatas, {
         onSuccess: (data) => {
           if (data.data?.waitingList) {
-            handleUpdateShopStatus(currentShop?.id)
+            handleUpdateShopStatus(currentShop.id)
             setCurrentWaitingList(data.data.waitingList)
           }
         },
@@ -58,12 +60,12 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
       current_number:0,
       session_date:new Date(),
       status:WaitingListStatusEnum.OPEN,
-      barberShopId:currentShop?.id
+      barberShopId:currentShop.id
     }
     doCreateNewWaitingList(requestDatas,{ 
       onSuccess: (data) => {
         if (data.data?.waitingList) {
-          handleUpdateShopStatus(currentShop?.id)
+          handleUpdateShopStatus(currentShop.id)
           setCurrentWaitingList(data.data.waitingList)
         }
       },
@@ -112,8 +114,9 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
   }
 
   const handleOpenService = (currentStatusToHave: WaitingListNumberStatus) => {
+      if (!currentNumber && firstNumberStatus !== CREATED) return
       // TODO: Marquer le client comme terminé
-      if(currentNumber.status !== IN_PROGRESS || !isCurrentNumberGreaterThanZero) {
+      if(currentNumber?.status !== IN_PROGRESS || !isCurrentNumberGreaterThanZero) {
         const next = getNextNumber(currentWaitingList?.current_number)
         if (next !== -1 && onOpenNextNumberModal) {
           onOpenNextNumberModal(next)
@@ -121,16 +124,16 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
         return
       }
       let requestDatas: IUpdateListNumberStatusHookParams
-      if(currentNumber.status == IN_PROGRESS && currentStatusToHave === COMPLETED) {
+      if(currentNumber?.status == IN_PROGRESS && currentStatusToHave === COMPLETED) {
           requestDatas = {
-            numberId: currentNumber?.id,
+            numberId: currentNumber.id,
             datas:{
               status: COMPLETED
             }
           }
       } else {
         requestDatas = {
-          numberId: currentNumber?.id,
+          numberId: currentNumber.id,
           datas:{
             status: currentStatusToHave
           }
@@ -151,6 +154,9 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
             }
           })
   }
+
+
+  console.log({currentWaitingList})
 
   
  return (
@@ -183,12 +189,12 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
               </div>
             </div> :
             <div className="flex items-center gap-3.5 bg-gray-50 rounded-lg p-3.5 mb-4">
-              <div className="font-serif text-5xl text-amber-700 leading-none">{currentWaitingList?.waiting_list_numbers.length ===0 ? "Pas encore en service" : "Aucun client pour le moment"}</div>
+              <div className="font-serif text-5xl text-amber-700 leading-none">{currentWaitingList?.waiting_list_numbers.length ===0 ? "Pas encore en service" : "Aucun client en chaise pour le moment"}</div>
             </div> 
           }
           <div className="flex gap-2.5">
-            { currentNumber?.status == IN_PROGRESS &&
-              <button disabled={currentWaitingList?.waiting_list_numbers.length ===0} onClick={() => handleOpenService(COMPLETED)} className="flex-1 py-2.5 px-4 rounded-lg bg-gray-900 text-white font-sans text-sm font-semibold hover:bg-gray-800 transform hover:-translate-y-0.5 transition-all duration-180 shadow-lg disabled:bg-dark-card disabled:text-white/30 disabled:cursor-not-allowed disabled:hover:bg-dark-card">
+            { (currentNumber?.status == IN_PROGRESS || firstNumberStatus == CREATED) &&
+              <button disabled={currentWaitingList?.waiting_list_numbers.length ===0} onClick={() => handleOpenService(firstNumberStatus == CREATED ? IN_PROGRESS : COMPLETED)} className="flex-1 py-2.5 px-4 rounded-lg bg-gray-900 text-white font-sans text-sm font-semibold hover:bg-gray-800 transform hover:-translate-y-0.5 transition-all duration-180 shadow-lg disabled:bg-dark-card disabled:text-white/30 disabled:cursor-not-allowed disabled:hover:bg-dark-card">
                 ✅ {isCurrentNumberGreaterThanZero ? 'Marquer terminé' : 'Débuter'}
               </button>
             }
@@ -200,7 +206,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({ onOpe
           </div>
         </div>
       }
-      { currentWaitingList?.waiting_list_numbers?.length > 0 &&
+      { (currentWaitingList?.waiting_list_numbers?.length ?? 0) > 0 &&
         <div className="flex flex-col">
           {/* <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
             <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">07</div>
