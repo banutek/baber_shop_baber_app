@@ -1,11 +1,20 @@
 import type React from 'react'
 
+import { useDailyStatsHook } from '../../hooks'
+
 export interface IStatsRowComponentProps {
   default_props?: boolean
   default_method?: () => void
 }
 
 export const StatsRowComponent: React.FC<IStatsRowComponentProps> = () => {
+  const { data: statsData } = useDailyStatsHook()
+  const stats = statsData?.data
+
+  const servedCount = stats?.servedCount ?? 0
+  const waitingCount = stats?.waitingCount ?? 0
+  const avgWaitMin = stats?.avgWaitMin ?? 0
+
   return (
     <div className="grid grid-cols-3 gap-3 my-4">
       <div className="bg-white rounded-lg p-3.5 shadow-lg flex items-center gap-3 animate-fadeUp">
@@ -13,7 +22,7 @@ export const StatsRowComponent: React.FC<IStatsRowComponentProps> = () => {
           ✅
         </div>
         <div className="text-center">
-          <div className="font-serif text-xl text-gray-900 leading-none">12</div>
+          <div className="font-serif text-xl text-gray-900 leading-none">{servedCount}</div>
           <div className="text-xs text-gray-400 mt-0.5">Servis</div>
         </div>
       </div>
@@ -25,7 +34,7 @@ export const StatsRowComponent: React.FC<IStatsRowComponentProps> = () => {
           ⏳
         </div>
         <div className="text-center">
-          <div className="font-serif text-xl text-gray-900 leading-none">4</div>
+          <div className="font-serif text-xl text-gray-900 leading-none">{waitingCount}</div>
           <div className="text-xs text-gray-400 mt-0.5">En attente</div>
         </div>
       </div>
@@ -38,7 +47,8 @@ export const StatsRowComponent: React.FC<IStatsRowComponentProps> = () => {
         </div>
         <div className="text-center">
           <div className="font-serif text-xl text-gray-900 leading-none">
-            18<span className="text-xs">min</span>
+            {avgWaitMin}
+            <span className="text-xs">min</span>
           </div>
           <div className="text-xs text-gray-400 mt-0.5">Temps moyen</div>
         </div>

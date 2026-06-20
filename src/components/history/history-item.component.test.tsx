@@ -11,7 +11,7 @@ describe('HistoryItemComponent', () => {
         text="N°06 terminé"
         time="10:41"
         duration="21 min"
-      />
+      />,
     )
     expect(screen.getByText('✅')).toBeInTheDocument()
     expect(screen.getByText('N°06 terminé')).toBeInTheDocument()
@@ -20,16 +20,14 @@ describe('HistoryItemComponent', () => {
   })
 
   it('should not show duration when not provided', () => {
-    render(
-      <HistoryItemComponent icon="⏭" iconType="red" text="N°05 sauté" time="10:17" />
-    )
+    render(<HistoryItemComponent icon="⏭" iconType="red" text="N°05 sauté" time="10:17" />)
     expect(screen.getByText('N°05 sauté')).toBeInTheDocument()
     expect(screen.queryByText(/min/)).not.toBeInTheDocument()
   })
 
   it('should apply green background for green iconType', () => {
     const { container } = render(
-      <HistoryItemComponent icon="✅" iconType="green" text="Done" time="09:00" />
+      <HistoryItemComponent icon="✅" iconType="green" text="Done" time="09:00" />,
     )
     const iconDiv = container.querySelector('.bg-green-50')
     expect(iconDiv).toBeInTheDocument()
@@ -37,7 +35,7 @@ describe('HistoryItemComponent', () => {
 
   it('should apply red background for red iconType', () => {
     const { container } = render(
-      <HistoryItemComponent icon="⏭" iconType="red" text="Skipped" time="10:00" />
+      <HistoryItemComponent icon="⏭" iconType="red" text="Skipped" time="10:00" />,
     )
     expect(container.querySelector('.bg-red-50')).toBeInTheDocument()
   })
@@ -51,7 +49,7 @@ describe('HistoryItemComponent', () => {
         time="10:00"
         duration="Sauté"
         durationType="red"
-      />
+      />,
     )
     expect(container.querySelector('.bg-red-50.text-red-500')).toBeInTheDocument()
   })

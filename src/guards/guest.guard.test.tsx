@@ -28,13 +28,16 @@ describe('GuestGuard', () => {
       <MemoryRouter initialEntries={[initialRoute]}>
         <Routes>
           <Route path="/" element={<div>Home Page</div>} />
-          <Route path="/login" element={
-            <GuestGuard>
-              <div>Guest Content</div>
-            </GuestGuard>
-          } />
+          <Route
+            path="/login"
+            element={
+              <GuestGuard>
+                <div>Guest Content</div>
+              </GuestGuard>
+            }
+          />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     )
 
   it('should render children when user is not logged in', () => {

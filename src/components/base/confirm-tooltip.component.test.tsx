@@ -8,7 +8,7 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={() => {}}>
         <button>Clique-moi</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
     expect(screen.getByText('Clique-moi')).toBeInTheDocument()
   })
@@ -18,12 +18,14 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={() => {}}>
         <button>Action</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
 
     await user.click(screen.getByText('Action'))
 
-    expect(screen.getByText('Êtes-vous sûr de vouloir effectuer cette action ?')).toBeInTheDocument()
+    expect(
+      screen.getByText('Êtes-vous sûr de vouloir effectuer cette action ?'),
+    ).toBeInTheDocument()
     expect(screen.getByText('Non')).toBeInTheDocument()
     expect(screen.getByText('Oui')).toBeInTheDocument()
   })
@@ -33,7 +35,7 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={() => {}} message="Vraiment supprimer ?">
         <button>Supprimer</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
 
     await user.click(screen.getByText('Supprimer'))
@@ -48,7 +50,7 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={onConfirm}>
         <button>Valider</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
 
     await user.click(screen.getByText('Valider'))
@@ -65,7 +67,7 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={onConfirm}>
         <button>Annuler</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
 
     await user.click(screen.getByText('Annuler'))
@@ -81,7 +83,7 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={() => {}} disabled={true}>
         <button>Désactivé</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
 
     await user.click(screen.getByText('Désactivé'))
@@ -96,7 +98,7 @@ describe('ConfirmTooltip', () => {
     render(
       <ConfirmTooltip onConfirm={() => {}} confirmLabel="Confirmer" cancelLabel="Annuler">
         <button>Go</button>
-      </ConfirmTooltip>
+      </ConfirmTooltip>,
     )
 
     await user.click(screen.getByText('Go'))

@@ -45,7 +45,7 @@ describe('QueueRecapComponent', () => {
     render(
       <MemoryRouter>
         <QueueRecapComponent />
-      </MemoryRouter>
+      </MemoryRouter>,
     )
 
   it('should show "Vous êtes fermé" when shop is closed', () => {

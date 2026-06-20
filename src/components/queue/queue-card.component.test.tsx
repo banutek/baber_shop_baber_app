@@ -42,9 +42,7 @@ describe('QueueCardComponent', () => {
   })
 
   it('should apply green side color for green badgeType', () => {
-    const { container } = render(
-      <QueueCardComponent {...defaultProps} badgeType="green" />
-    )
+    const { container } = render(<QueueCardComponent {...defaultProps} badgeType="green" />)
     expect(container.querySelector('.bg-green-500')).toBeInTheDocument()
   })
 

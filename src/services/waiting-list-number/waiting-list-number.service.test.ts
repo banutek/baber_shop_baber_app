@@ -14,7 +14,9 @@ describe('WaitingListNumberService', () => {
 
   describe('update_waiting_list_number_status', () => {
     it('should call PATCH with correct URL, body, and NO auth', async () => {
-      mockedAxios.mockResolvedValue({ data: { waitingListNumber: { id: 'n1', status: 'COMPLETED' } } })
+      mockedAxios.mockResolvedValue({
+        data: { waitingListNumber: { id: 'n1', status: 'COMPLETED' } },
+      })
 
       await WaitingListNumberService.update_waiting_list_number_status('num-5', {
         status: 'COMPLETED' as any,

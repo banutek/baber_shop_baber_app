@@ -31,13 +31,16 @@ describe('AuthGuard', () => {
         <Routes>
           <Route path="/login" element={<div>Login Page</div>} />
           <Route path="/create-new-shop" element={<div>CreateShop Page</div>} />
-          <Route path="*" element={
-            <AuthGuard>
-              <div>Protected Content</div>
-            </AuthGuard>
-          } />
+          <Route
+            path="*"
+            element={
+              <AuthGuard>
+                <div>Protected Content</div>
+              </AuthGuard>
+            }
+          />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     )
 
   it('should redirect to /login when no user in localStorage', () => {

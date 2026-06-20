@@ -19,6 +19,10 @@ export const waitingListUrls = {
   UPDATE_WAITING_LIST: (listId: string) => `${prefixer}waiting-list/${listId}`,
 }
 
+export const statsUrls = {
+  GET_DAILY_STATS: (shopId: string) => `${prefixer}stats/shop/${shopId}/daily`,
+}
+
 export const waitingListNumberUrls = {
   // GET_WAITING_LIST_NUMBER_BY_SHOP_ID: (shopId: string) => `${prefixer}waiting-list-number/by-shop-id/${shopId}`,
   // GET_WAITING_LIST_NUMBER_BY_LIST_ID: (listId: string) => `${prefixer}waiting-list-number/by-list/${listId}`,

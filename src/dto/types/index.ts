@@ -1,4 +1,5 @@
 export * from './barber-shop.dto'
+export * from './daily-stats.dto'
 export * from './device.dto'
 export * from './user.dto'
 export * from './waiting-list.dto'

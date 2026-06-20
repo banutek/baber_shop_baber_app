@@ -18,7 +18,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
 
   const doLogout = () => {
-    handleUpdateShopStatus(currentShop?.id)
+    handleUpdateShopStatus(currentShop?.id as string)
   }
 
   const handleUpdateShopStatus = (shopId: string) => {

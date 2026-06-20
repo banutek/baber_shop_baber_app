@@ -18,6 +18,7 @@ import {
   useUpdateShopStatusHook,
   useUpdateWaitingListStatusHook,
 } from '../../hooks'
+import { useElapsedMinutes } from '../../hooks/use-elapsed-minutes.hook'
 import { useShopStore } from '../../stores'
 import { ConfirmTooltip } from '../base/confirm-tooltip.component'
 
@@ -42,6 +43,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
   const firstNumberStatus = currentWaitingList?.waiting_list_numbers
     ? currentWaitingList.waiting_list_numbers[0]?.status
     : undefined
+  const currentNumberElapsedMin = useElapsedMinutes(currentNumber?.createdAt)
 
   const { mutate: doCreateNewWaitingList } = useCreateNewWaitingListHook()
   const { mutate: doUpdateWaitingListStatus } = useUpdateWaitingListStatusHook()
@@ -232,7 +234,11 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
                   </div>
                 )}
                 <div className="text-base font-semibold text-gray-900 my-0.5">{`Client #${currentDevice}`}</div>
-                <div className="text-xs text-gray-400">Scanné il y a 3 min</div>
+                <div className="text-xs text-gray-400">
+                  {currentNumberElapsedMin !== null
+                    ? `Scanné il y a ${currentNumberElapsedMin} min`
+                    : ''}
+                </div>
               </div>
             </div>
           ) : (
@@ -322,11 +328,23 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
               >
                 {statusListNumberConfig[number?.status]?.label}
               </span>
-              <div className="text-xs text-gray-400 ml-auto">{number.value} min</div>
+              {([CREATED, PENDING, NEXT] as WaitingListNumberStatus[]).includes(number.status) && (
+                <QueueItemElapsedMin createdAt={number.createdAt} />
+              )}
             </div>
           ))}
         </div>
       )}
     </div>
   )
+}
+
+const QueueItemElapsedMin: React.FC<{ createdAt: Date | string }> = ({ createdAt }) => {
+  const elapsed = useElapsedMinutes(createdAt)
+
+  if (elapsed === null) {
+    return <div className="text-xs text-gray-400 ml-auto" />
+  }
+
+  return <div className="text-xs text-gray-400 ml-auto">{elapsed} min</div>
 }

@@ -57,7 +57,7 @@ describe('ProfileCardComponent', () => {
     render(
       <MemoryRouter>
         <ProfileCardComponent />
-      </MemoryRouter>
+      </MemoryRouter>,
     )
 
   it('should display user initials in avatar', () => {
