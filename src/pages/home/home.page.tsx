@@ -22,7 +22,7 @@ export interface IHomePageProps {
 }
 
 export const HomePage: React.FC<IHomePageProps> = () => {
-  const { setCurrentShop, setCurrentWaitingList } = useShopStore()
+  const { currentWaitingList, setCurrentShop, setCurrentWaitingList } = useShopStore()
   const { data } = useGetShopByManagerHook()
   const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
   const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
@@ -54,6 +54,25 @@ export const HomePage: React.FC<IHomePageProps> = () => {
         if (data?.data?.waitingListNumber) {
           if (statusToHave === WaitingListNumberStatus.IN_PROGRESS) {
             handleTakeNextNumber()
+            // Identifier le numéro suivant et le passer en NEXT
+            const candidates = currentWaitingList?.waiting_list_numbers?.filter(
+              (item) =>
+                [WaitingListNumberStatus.CREATED, WaitingListNumberStatus.PENDING].includes(
+                  item.status,
+                ) && item.id !== nextNumber?.id,
+            )
+            if (candidates && candidates.length > 0) {
+              const sorted = [...candidates].sort((a, b) => Number(a.value) - Number(b.value))
+              const nextInLine = sorted.find(
+                (item) => Number(item.value) > Number(nextNumber?.value ?? 0),
+              )
+              if (nextInLine) {
+                doUpdateListNumberStatus({
+                  numberId: nextInLine.id,
+                  datas: { status: WaitingListNumberStatus.NEXT },
+                } as IUpdateListNumberStatusHookParams)
+              }
+            }
           }
           doCloseModal()
         }
