@@ -1,13 +1,23 @@
 import type React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { NotificationBell } from '../notification/notification-bell.component'
+
 export interface ITopBarComponentProps {
   default_props?: boolean
   default_method?: () => void
   title?: string
+  /** ID du device pour lequel afficher les notifications (ex: device du client connecté) */
+  notificationDeviceId?: string
+  /** ID du shop pour lequel afficher les notifications (ex: dashboard barber) */
+  notificationShopId?: string
 }
 
-export const TopBarComponent: React.FC<ITopBarComponentProps> = ({ title }) => {
+export const TopBarComponent: React.FC<ITopBarComponentProps> = ({
+  title,
+  notificationDeviceId,
+  notificationShopId,
+}) => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
@@ -36,12 +46,7 @@ export const TopBarComponent: React.FC<ITopBarComponentProps> = ({ title }) => {
       <div className="flex gap-2 items-center">
         {pathname === '/' ? (
           <>
-            <div className="relative">
-              <button className="w-9 h-9 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center text-base hover:bg-amber-50 hover:text-amber-700 transition-all duration-200">
-                🔔
-              </button>
-              <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-600 border-2 border-white" />
-            </div>
+            <NotificationBell deviceId={notificationDeviceId} shopId={notificationShopId} />
             <button className="w-9 h-9 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center text-base hover:bg-amber-50 hover:text-amber-700 transition-all duration-200">
               ⚙️
             </button>

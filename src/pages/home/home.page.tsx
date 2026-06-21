@@ -22,7 +22,7 @@ export interface IHomePageProps {
 }
 
 export const HomePage: React.FC<IHomePageProps> = () => {
-  const { currentWaitingList, setCurrentShop, setCurrentWaitingList } = useShopStore()
+  const { currentShop, currentWaitingList, setCurrentShop, setCurrentWaitingList } = useShopStore()
   const { data } = useGetShopByManagerHook()
   const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
   const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
@@ -126,7 +126,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
           }
         `}</style>
 
-        <TopBarComponent />
+        <TopBarComponent notificationShopId={currentShop?.id} />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-6xl mx-auto px-6 py-7">
           {/* Sidebar */}

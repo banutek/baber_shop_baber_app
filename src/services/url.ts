@@ -29,3 +29,12 @@ export const waitingListNumberUrls = {
   UPDATE_WAITING_LIST_NUMBER_STATUS: (numberId: string) =>
     `${prefixer}waiting-list-number/status/${numberId}`,
 }
+
+export const notificationUrls = {
+  GET_NOTIFICATIONS_BY_DEVICE: (deviceId: string) =>
+    `${prefixer}notification/device/${deviceId}`,
+  GET_NOTIFICATIONS_BY_SHOP: (shopId: string) =>
+    `${prefixer}notification/shop/${shopId}`,
+  UPDATE_NOTIFICATION_STATUS: (notificationId: string) =>
+    `${prefixer}notification/${notificationId}/status`,
+}
