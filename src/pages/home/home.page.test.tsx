@@ -1,10 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
-import { HomePage } from './home.page'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { ShopOpenStatus, WaitingListNumberStatus, WaitingListStatusEnum } from '../../dto'
 import { useShopStore } from '../../stores'
-import { WaitingListNumberStatus, WaitingListStatusEnum, ShopOpenStatus } from '../../dto'
+import { HomePage } from './home.page'
 
 // ── Mocks ──────────────────────────────────────────────────────────────────────
 

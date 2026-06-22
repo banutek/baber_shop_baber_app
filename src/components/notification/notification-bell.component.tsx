@@ -1,8 +1,12 @@
 import type React from 'react'
 import { useEffect, useRef, useState } from 'react'
 
-import { NotificationStatus, type INotificationDtoOut } from '../../dto'
-import { useNotificationsHook, useShopNotificationsHook, useUpdateNotificationStatusHook } from '../../hooks'
+import { type INotificationDtoOut, NotificationStatus } from '../../dto'
+import {
+  useNotificationsHook,
+  useShopNotificationsHook,
+  useUpdateNotificationStatusHook,
+} from '../../hooks'
 import { useNotificationStore } from '../../stores'
 
 export interface INotificationBellProps {
@@ -23,7 +27,8 @@ export const NotificationBell: React.FC<INotificationBellProps> = ({ deviceId, s
 
   // Sync remote notifications into the store (device or shop source)
   useEffect(() => {
-    const data = deviceNotificationsData?.data?.notifications ?? shopNotificationsData?.data?.notifications
+    const data =
+      deviceNotificationsData?.data?.notifications ?? shopNotificationsData?.data?.notifications
     if (data) {
       setNotifications(data)
     }
@@ -111,9 +116,7 @@ export const NotificationBell: React.FC<INotificationBellProps> = ({ deviceId, s
                   <div className="flex items-start gap-3">
                     <div
                       className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                        notif.status === NotificationStatus.PENDING
-                          ? 'bg-amber-500'
-                          : 'bg-gray-300'
+                        notif.status === NotificationStatus.PENDING ? 'bg-amber-500' : 'bg-gray-300'
                       }`}
                     />
                     <div className="flex-1 min-w-0">

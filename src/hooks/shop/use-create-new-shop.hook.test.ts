@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import axios, { type AxiosRequestConfig } from 'axios'
-import { useCreateNewShopHook } from './use-create-new-shop.hook'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { createWrapper } from '../../test/test-utils'
+import { useCreateNewShopHook } from './use-create-new-shop.hook'
 
 vi.mock('axios')
 

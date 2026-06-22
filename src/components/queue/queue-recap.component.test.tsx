@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { QueueRecapComponent } from './queue-recap.component'
+import { render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { ShopOpenStatus, WaitingListNumberStatus, WaitingListStatusEnum } from '../../dto'
 import { useShopStore } from '../../stores'
-import { ShopOpenStatus, WaitingListStatusEnum, WaitingListNumberStatus } from '../../dto'
+import { QueueRecapComponent } from './queue-recap.component'
 
 vi.mock('../../hooks', () => ({
   useCreateNewWaitingListHook: () => ({ mutate: vi.fn() }),

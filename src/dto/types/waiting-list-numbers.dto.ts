@@ -9,6 +9,8 @@ export interface IWaitingListNumbersDtoOut {
   status: WaitingListNumberStatus
   createdAt: Date
   updatedAt: Date
+  inProgressAt: Date
+  completedAt: Date
   waitingListId: string
   waitingList: IWaitingListDtoOut
   deviceId: string

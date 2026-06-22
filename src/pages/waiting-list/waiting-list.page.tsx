@@ -1,4 +1,6 @@
 import type React from 'react'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import {
   CurrentBannerComponent,
@@ -9,6 +11,8 @@ import {
   TopBarComponent,
 } from '../../components'
 import { AuthGuard } from '../../guards'
+import { useGetShopByManagerHook, useGetWaitingListByShopHook } from '../../hooks'
+import { useShopStore } from '../../stores'
 
 export interface IWaitingListProps {
   default_props?: boolean
@@ -16,12 +20,28 @@ export interface IWaitingListProps {
 }
 
 export const WaitingListPage: React.FC<IWaitingListProps> = () => {
+  const { setCurrentWaitingList, setCurrentShop, currentShop } = useShopStore()
+  const { data } = useGetShopByManagerHook()
+  const { data: waitingListData } = useGetWaitingListByShopHook(currentShop?.id as string)
+
+  useEffect(() => {
+    if (data) {
+      setCurrentShop(data.data.shop)
+    }
+  }, [data, setCurrentShop])
+
+  useEffect(() => {
+    if (waitingListData?.data?.waitingList) {
+      setCurrentWaitingList(waitingListData.data.waitingList)
+    }
+  }, [waitingListData, setCurrentWaitingList])
+
   return (
     <AuthGuard>
       <div className="min-h-screen bg-gray-50 text-gray-900 overflow-x-hidden">
         <style>{`
           @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(14px); }
+            from { opacity: 0; transform: translateY(14px); } 
             to   { opacity: 1; transform: translateY(0); }
           }
           .animate-fadeUp {

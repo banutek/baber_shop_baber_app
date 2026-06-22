@@ -8,6 +8,9 @@ import { useShopStore } from '../../stores'
 export const useGetWaitingListByShopHook = (shopId: string) => {
   const { currentShop } = useShopStore()
 
+  console.log({ currentShop })
+  console.log({ shopId })
+
   const currentList = currentShop?.barber_shop_waiting_list?.find(
     (_) => new Date(_.createdAt).getDay() === new Date().getDay(),
   )
@@ -20,7 +23,7 @@ export const useGetWaitingListByShopHook = (shopId: string) => {
       return WaitingListService.get_waiting_list_by_shop_id(shopId)
     },
     retry: 1,
-    enabled: !!shopId && !!currentList,
+    enabled: !!shopId,
     refetchOnWindowFocus: true,
   })
 }

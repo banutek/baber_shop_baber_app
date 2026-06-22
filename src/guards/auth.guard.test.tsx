@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
-import { AuthGuard } from './auth.guard'
+import { beforeEach, describe, expect, it } from 'vitest'
+
 import { useAuthStore } from '../stores'
+import { AuthGuard } from './auth.guard'
 
 const mockUser = {
   access_token: 'token',

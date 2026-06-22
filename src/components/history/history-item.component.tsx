@@ -5,7 +5,7 @@ export interface IHistoryItemComponentProps {
   iconType: string
   text: string
   time: string
-  duration?: string
+  duration?: number | string
   durationType?: string
 }
 
@@ -28,6 +28,8 @@ export const HistoryItemComponent: React.FC<IHistoryItemComponentProps> = ({
     if (durationType === 'red') return 'bg-red-50 text-red-500'
     return 'bg-green-50 text-green-600'
   }
+
+  console.log({ duration })
 
   return (
     <div className="flex items-center gap-3.5 p-3.5 bg-white rounded-lg shadow-lg animate-fadeUp">

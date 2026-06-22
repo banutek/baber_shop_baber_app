@@ -9,6 +9,8 @@ export const useDailyStatsHook = () => {
   const { currentShop } = useShopStore()
   const shopId = currentShop?.id
 
+  console.log({ shopId })
+
   return useQuery<AxiosResponse<IDailyStatsDtoOut>, Error>({
     queryKey: ['daily-stats', shopId],
     queryFn: () => {

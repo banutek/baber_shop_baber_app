@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { useShopStore } from './shop.store'
+import { beforeEach, describe, expect, it } from 'vitest'
+
 import type { IBarberShopDtoOut, IWaitingListDtoOut } from '../../dto'
+import { useShopStore } from './shop.store'
 
 const mockShop: IBarberShopDtoOut = {
   id: 'shop-1',

@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import axios from 'axios'
-import { useUpdateWaitingListStatusHook } from './use-update-waiting-list-status.hook'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { createWrapper } from '../../test/test-utils'
+import { useUpdateWaitingListStatusHook } from './use-update-waiting-list-status.hook'
 
 vi.mock('axios')
 

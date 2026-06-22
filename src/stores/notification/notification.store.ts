@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import { NotificationStatus, type INotificationDtoOut } from '../../dto'
+import { type INotificationDtoOut, NotificationStatus } from '../../dto'
 
 type NotificationStore = {
   notifications: INotificationDtoOut[]

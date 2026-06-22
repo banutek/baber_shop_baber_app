@@ -31,10 +31,8 @@ export const waitingListNumberUrls = {
 }
 
 export const notificationUrls = {
-  GET_NOTIFICATIONS_BY_DEVICE: (deviceId: string) =>
-    `${prefixer}notification/device/${deviceId}`,
-  GET_NOTIFICATIONS_BY_SHOP: (shopId: string) =>
-    `${prefixer}notification/shop/${shopId}`,
+  GET_NOTIFICATIONS_BY_DEVICE: (deviceId: string) => `${prefixer}notification/device/${deviceId}`,
+  GET_NOTIFICATIONS_BY_SHOP: (shopId: string) => `${prefixer}notification/shop/${shopId}`,
   UPDATE_NOTIFICATION_STATUS: (notificationId: string) =>
     `${prefixer}notification/${notificationId}/status`,
 }

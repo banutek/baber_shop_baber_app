@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { useAuthStore } from './auth.store'
+import { beforeEach, describe, expect, it } from 'vitest'
+
 import type { ILoginUserResponse } from '../../dto'
+import { useAuthStore } from './auth.store'
 
 const mockUser: ILoginUserResponse = {
   access_token: 'fake-token-123',

@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios, { type AxiosRequestConfig } from 'axios'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { AuthService } from './auth.service'
 
 vi.mock('axios')

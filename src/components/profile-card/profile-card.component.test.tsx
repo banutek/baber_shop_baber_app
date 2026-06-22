@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { ProfileCardComponent } from './profile-card.component'
+import { render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useAuthStore } from '../../stores'
 import { useShopStore } from '../../stores'
+import { ProfileCardComponent } from './profile-card.component'
 
 vi.mock('../../hooks', () => ({
   useUpdateShopStatusHook: () => ({

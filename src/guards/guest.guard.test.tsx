@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { beforeEach, describe, expect, it } from 'vitest'
+
 import { GuestGuard } from './guest.guard'
 
 const mockUser = {

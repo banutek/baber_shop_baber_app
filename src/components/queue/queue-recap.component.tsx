@@ -272,7 +272,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
                 </button>
               </ConfirmTooltip>
             )}
-            {isCurrentNumberGreaterThanZero && (
+            {isCurrentNumberGreaterThanZero && currentNumber?.status !== IN_PROGRESS && (
               <ConfirmTooltip
                 className="flex-1"
                 onConfirm={() => handleOpenService(MISSING)}
