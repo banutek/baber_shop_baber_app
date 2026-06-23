@@ -79,7 +79,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
       lastName: formData.last_name,
       email: formData.email,
       password: formData.password,
-      phone: formData.phone,
+      phone: selectedCountry.dialCode + formData.phone,
       address: formData.address,
       role: RoleEnum.BARBER,
     }

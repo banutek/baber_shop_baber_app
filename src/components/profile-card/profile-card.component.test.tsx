@@ -7,6 +7,7 @@ import { useShopStore } from '../../stores'
 import { ProfileCardComponent } from './profile-card.component'
 
 vi.mock('../../hooks', () => ({
+  useAutoCloseShopHook: vi.fn(),
   useUpdateShopStatusHook: () => ({
     mutate: vi.fn((_data, _options) => {}),
   }),
@@ -38,6 +39,8 @@ describe('ProfileCardComponent', () => {
         profileImage: '',
         latitude: 0,
         longitude: 0,
+        hours: '09:00 — 19:00',
+        closingTime: '19:00',
         phone: '',
         email: '',
         isActive: true,

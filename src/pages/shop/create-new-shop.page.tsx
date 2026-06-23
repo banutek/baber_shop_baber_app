@@ -36,6 +36,39 @@ const countries: Country[] = [
   { code: 'MU', name: 'Mauritius', flag: '🇲🇺', dialCode: '+230' },
 ]
 
+const HOURS = [
+  '08',
+  '09',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
+  '23',
+  '00',
+]
+const MINUTES = ['00', '15', '30', '45']
+
+const generateTimeSlots = (): string[] => {
+  const slots: string[] = []
+  for (const h of HOURS) {
+    for (const m of MINUTES) {
+      slots.push(`${h}:${m}`)
+    }
+  }
+  return slots
+}
+
+const TIME_SLOTS = generateTimeSlots()
+
 export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const navigate = useNavigate()
   const [showCountryDropdown, setShowCountryDropdown] = useState(false)
@@ -47,9 +80,13 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
     latitude: undefined,
     longitude: undefined,
     email: '',
+    hours: '',
+    closingTime: '',
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [openingTime, setOpeningTime] = useState('08:00')
+  const [closingTime, setClosingTime] = useState('19:00')
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -127,6 +164,8 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
     formDataToSend.append('name', formDatas.name)
     formDataToSend.append('address', formDatas.address)
     formDataToSend.append('phone', formDatas.phone)
+    formDataToSend.append('hours', `${openingTime} — ${closingTime}`)
+    formDataToSend.append('closingTime', closingTime)
 
     if (formDatas.email) {
       formDataToSend.append('email', formDatas.email)
@@ -244,6 +283,36 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 onChange={(e) => setFormDatas({ ...formDatas, name: e.target.value })}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
               />
+            </div>
+
+            {/* Hours Input */}
+            <div className="mb-5">
+              <label className="block text-gray-400 text-sm mb-2">Horaires d'ouverture</label>
+              <div className="flex items-center gap-2">
+                <select
+                  value={openingTime}
+                  onChange={(e) => setOpeningTime(e.target.value)}
+                  className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none appearance-none cursor-pointer"
+                >
+                  {TIME_SLOTS.map((slot) => (
+                    <option key={slot} value={slot}>
+                      {slot}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-gray-400 text-lg font-semibold">—</span>
+                <select
+                  value={closingTime}
+                  onChange={(e) => setClosingTime(e.target.value)}
+                  className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none appearance-none cursor-pointer"
+                >
+                  {TIME_SLOTS.map((slot) => (
+                    <option key={slot} value={slot}>
+                      {slot}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Email Input */}

@@ -10,6 +10,8 @@ export interface INewBarberShopDtoIn {
   longitude?: number
   phone: string
   email?: string
+  hours: string
+  closingTime: string
 }
 
 export interface IBarberShopDtoOut {
@@ -21,6 +23,8 @@ export interface IBarberShopDtoOut {
   longitude: number
   phone: string
   email: string
+  hours: string
+  closingTime: string
   isActive: boolean
   openStatus: ShopOpenStatus
   createdAt: Date

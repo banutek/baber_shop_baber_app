@@ -2,7 +2,7 @@ import type React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { ShopOpenStatus } from '../../dto'
-import { useUpdateShopStatusHook } from '../../hooks'
+import { useAutoCloseShopHook, useUpdateShopStatusHook } from '../../hooks'
 import { useAuthStore, useShopStore } from '../../stores'
 
 export interface IProfileComponentProps {
@@ -16,6 +16,18 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const { currentShop } = useShopStore()
 
   const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
+
+  // Fermeture automatique du salon à l'heure définie dans shop.hours
+  useAutoCloseShopHook({
+    shop: currentShop,
+    onAutoCloseSuccess: () => {
+      localStorage.removeItem('user')
+      navigate('/login')
+    },
+    onAutoCloseError: (error) => {
+      console.error('[ProfileCard] Auto-close failed:', error)
+    },
+  })
 
   const doLogout = () => {
     handleUpdateShopStatus(currentShop?.id as string)
@@ -88,7 +100,9 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
           </div>
           <div>
             <span className="text-xs text-gray-400 block mb-0.5">Prise de service</span>
-            <span className="font-medium text-gray-900">09:00 — 19:00</span>
+            <span className="font-medium text-gray-900">
+              {currentShop?.hours || '09:00 — 19:00'}
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-2.5 py-2.5 text-xs text-gray-500">
