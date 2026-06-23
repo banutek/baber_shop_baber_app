@@ -25,7 +25,11 @@ describe('useUpdateShopStatusHook', () => {
 
     await waitFor(() => {
       expect(mockedAxios).toHaveBeenCalledTimes(1)
-      const config = mockedAxios.mock.calls[0][0]
+      const config = mockedAxios.mock.calls[0][0] as unknown as {
+        method: string
+        url: string
+        data: { openStatus: string }
+      }
       expect(config.method).toBe('PATCH')
       expect(config.url).toContain('/barber-shop/shop-5/status')
       expect(config.data).toEqual({ openStatus: 'BUSY' })

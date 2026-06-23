@@ -26,7 +26,11 @@ describe('useGetShopByManagerHook', () => {
     })
 
     expect(mockedAxios).toHaveBeenCalledTimes(1)
-    const config = mockedAxios.mock.calls[0][0]
+    const config = mockedAxios.mock.calls[0][0] as unknown as {
+      method: string
+      url: string
+      headers?: Record<string, string>
+    }
     expect(config.method).toBe('GET')
     expect(config.url).toContain('/barber-shop/by-manager-id')
     expect(config.headers?.Authorization).toBe('Bearer tok')

@@ -31,7 +31,11 @@ describe('useLoginUserHook', () => {
 
     await waitFor(() => {
       expect(mockedAxios).toHaveBeenCalledTimes(1)
-      const config = mockedAxios.mock.calls[0][0]
+      const config = mockedAxios.mock.calls[0][0] as unknown as {
+        method: string
+        url: string
+        data: { email: string; password: string }
+      }
       expect(config.method).toBe('POST')
       expect(config.url).toContain('/auth/login')
       expect(config.data).toEqual({ email: 'a@b.com', password: 'secret' })

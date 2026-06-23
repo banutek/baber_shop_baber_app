@@ -60,7 +60,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
   const handleOpenWaitingList = () => {
     if (!currentShop?.id) return
     const currentList = currentShop.barber_shop_waiting_list.find(
-      (_) => new Date(_.createdAt).getDay() === new Date().getDay(),
+      (_) => new Date(_.createdAt).toDateString() === new Date().toDateString(),
     )
     if (currentList) {
       const requestDatas = {
@@ -184,8 +184,6 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
       },
     })
   }
-
-  console.log({ currentWaitingList })
 
   return (
     <div className="bg-white rounded-2xl shadow-lg animate-slideUp">

@@ -14,6 +14,17 @@ vi.mock('../../hooks', () => ({
   useUpdateWaitingListStatusHook: () => ({ mutate: vi.fn() }),
 }))
 
+const baseDevice = {
+  id: 'dev-1',
+  platform: 'iOS',
+  createdAt: '2026-01-01',
+  updatedAt: '2026-01-01',
+  clientId: 'client-1',
+  client: 'Client 1',
+  device_notification: [],
+  device_scan_event: [],
+}
+
 const baseShop = {
   id: 's1',
   name: 'Salon Test',
@@ -57,7 +68,7 @@ describe('QueueRecapComponent', () => {
 
   it('should show "Tout voir" link when shop is open', () => {
     useShopStore.setState({
-      currentShop: { ...baseShop, openStatus: ShopOpenStatus.CLOSED },
+      currentShop: { ...baseShop, openStatus: ShopOpenStatus.OPEN },
     })
     renderComponent()
     expect(screen.getByText('Tout voir')).toBeInTheDocument()
@@ -102,10 +113,12 @@ describe('QueueRecapComponent', () => {
             status: WaitingListNumberStatus.IN_PROGRESS,
             createdAt: new Date(),
             updatedAt: new Date(),
+            inProgressAt: new Date(),
+            completedAt: new Date(),
             waitingListId: 'wl-1',
             waitingList: {} as any,
             deviceId: 'dev-1',
-            device: { platform: 'iOS' },
+            device: { ...baseDevice, platform: 'iOS' },
             waiting_list_number_notification: null,
             waiting_list_number_scan_event: null,
           },
@@ -140,10 +153,12 @@ describe('QueueRecapComponent', () => {
             status: WaitingListNumberStatus.IN_PROGRESS,
             createdAt: new Date(),
             updatedAt: new Date(),
+            inProgressAt: new Date(),
+            completedAt: new Date(),
             waitingListId: 'wl-1',
             waitingList: {} as any,
             deviceId: 'dev-1',
-            device: { platform: 'Android' },
+            device: { ...baseDevice, platform: 'Android' },
             waiting_list_number_notification: null,
             waiting_list_number_scan_event: null,
           },
@@ -154,10 +169,12 @@ describe('QueueRecapComponent', () => {
             status: WaitingListNumberStatus.CREATED,
             createdAt: new Date(),
             updatedAt: new Date(),
+            inProgressAt: new Date(),
+            completedAt: new Date(),
             waitingListId: 'wl-1',
             waitingList: {} as any,
             deviceId: 'dev-2',
-            device: { platform: 'Web' },
+            device: { ...baseDevice, id: 'dev-2', platform: 'Web' },
             waiting_list_number_notification: null,
             waiting_list_number_scan_event: null,
           },

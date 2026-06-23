@@ -9,8 +9,9 @@ describe('QueueCardComponent', () => {
     name: 'Youssef Amrani',
     meta: ['Compte client', 'iOS'],
     badge: '⚡ Prochain',
-    badgeType: 'amber',
-    elapsed: 'Attend depuis 32 min',
+    sideColor: 'bg-amber-600',
+    badgeColorClass: 'bg-amber-50 text-amber-700',
+    elapsed: new Date(Date.now() - 32 * 60 * 1000),
   }
 
   it('should render number, name, badge and elapsed time', () => {
@@ -18,7 +19,7 @@ describe('QueueCardComponent', () => {
     expect(screen.getByText('08')).toBeInTheDocument()
     expect(screen.getByText('Youssef Amrani')).toBeInTheDocument()
     expect(screen.getByText('⚡ Prochain')).toBeInTheDocument()
-    expect(screen.getByText('Attend depuis 32 min')).toBeInTheDocument()
+    expect(screen.getByText('32 min')).toBeInTheDocument()
   })
 
   it('should render all meta items', () => {
@@ -43,7 +44,7 @@ describe('QueueCardComponent', () => {
   })
 
   it('should apply green side color for green badgeType', () => {
-    const { container } = render(<QueueCardComponent {...defaultProps} badgeType="green" />)
+    const { container } = render(<QueueCardComponent {...defaultProps} sideColor="bg-green-500" />)
     expect(container.querySelector('.bg-green-500')).toBeInTheDocument()
   })
 

@@ -32,7 +32,10 @@ describe('useRegisterNewUserHook', () => {
 
     await waitFor(() => {
       expect(mockedAxios).toHaveBeenCalledTimes(1)
-      const config = mockedAxios.mock.calls[0][0]
+      const config = mockedAxios.mock.calls[0][0] as unknown as {
+        method: string
+        url: string
+      }
       expect(config.method).toBe('POST')
       expect(config.url).toContain('/auth/register')
     })

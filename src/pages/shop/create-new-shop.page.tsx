@@ -148,7 +148,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
     doCreateNewShop(formDataToSend, {
       onSuccess: (data) => {
         console.log('Shop created successfully:', data.data.shop)
-        const connectedUser = JSON.parse(localStorage.getItem('user'))
+        const connectedUser = JSON.parse(localStorage.getItem('user') ?? '{}')
         connectedUser.user.manager_barber_shop = data.data.shop
         localStorage.setItem('user', JSON.stringify(connectedUser))
         navigate('/')

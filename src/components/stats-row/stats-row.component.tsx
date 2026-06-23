@@ -15,8 +15,6 @@ export const StatsRowComponent: React.FC<IStatsRowComponentProps> = () => {
   const waitingCount = stats?.waitingCount ?? 0
   const avgWaitMin = stats?.avgWaitMin ?? 0
 
-  console.log({ statsData })
-
   return (
     <div className="grid grid-cols-3 gap-3 my-4">
       <div className="bg-white rounded-lg p-3.5 shadow-lg flex items-center gap-3 animate-fadeUp">

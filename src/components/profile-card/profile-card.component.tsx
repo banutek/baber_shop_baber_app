@@ -29,8 +29,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
       },
     }
     doUpdateShopStatus(requestDatas, {
-      onSuccess: (data) => {
-        console.log('response while updating::', data)
+      onSuccess: () => {
         localStorage.removeItem('user')
         navigate('/login')
       },

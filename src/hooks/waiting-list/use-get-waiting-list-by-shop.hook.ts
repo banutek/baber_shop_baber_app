@@ -3,27 +3,20 @@ import type { AxiosResponse } from 'axios'
 
 import type { IWaitingListDtoOut } from '../../dto'
 import { WaitingListService } from '../../services'
-import { useShopStore } from '../../stores'
 
 export const useGetWaitingListByShopHook = (shopId: string) => {
-  const { currentShop } = useShopStore()
-
-  console.log({ currentShop })
-  console.log({ shopId })
-
-  const currentList = currentShop?.barber_shop_waiting_list?.find(
-    (_) => new Date(_.createdAt).getDay() === new Date().getDay(),
-  )
-
-  console.log({ currentShop })
+  // const currentList = currentShop?.barber_shop_waiting_list?.find(
+  //   (_) => new Date(_.createdAt).getDay() === new Date().getDay(),
+  // )
 
   return useQuery<AxiosResponse<{ waitingList: IWaitingListDtoOut }>, Error>({
     queryKey: ['get-waiting-list-by-shop', shopId],
-    queryFn: () => {
-      return WaitingListService.get_waiting_list_by_shop_id(shopId)
+    queryFn: async () => {
+      const response = await WaitingListService.get_waiting_list_by_shop_id(shopId)
+      console.log({ response })
+      return response
     },
     retry: 1,
     enabled: !!shopId,
-    refetchOnWindowFocus: true,
   })
 }

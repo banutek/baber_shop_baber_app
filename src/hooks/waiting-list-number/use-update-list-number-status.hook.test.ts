@@ -26,7 +26,12 @@ describe('useUpdateListNumberStatusHook', () => {
 
     await waitFor(() => {
       expect(mockedAxios).toHaveBeenCalledTimes(1)
-      const config = mockedAxios.mock.calls[0][0]
+      const config = mockedAxios.mock.calls[0][0] as unknown as {
+        method: string
+        url: string
+        data: { status: string }
+        headers?: Record<string, string>
+      }
       expect(config.method).toBe('PATCH')
       expect(config.url).toContain('/waiting-list-number/status/num-3')
       expect(config.data).toEqual({ status: 'COMPLETED' })

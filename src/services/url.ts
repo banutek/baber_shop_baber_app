@@ -1,5 +1,8 @@
-export const baseUrl = 'http://127.0.0.1:4200/'
-export const prefixer = 'http://127.0.0.1:4200/api/v1/'
+// Chargé depuis .env.development (local) ou .env.production (en ligne)
+const API_URL = import.meta.env.VITE_API_URL
+
+export const baseUrl = API_URL.replace('/api/v1/', '/')
+export const prefixer = API_URL
 
 export const authUrls = {
   LOGIN_USER: `${prefixer}auth/login`,
