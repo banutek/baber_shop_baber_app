@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { type INewBarberShopDtoIn } from '../../dto'
 import { AuthGuard } from '../../guards'
 import { useCreateNewShopHook } from '../../hooks'
+import { MapPickerModal } from '../../components/map-picker-modal/map-picker-modal.component'
 
 export interface ICreateNewShopProps {
   default_props?: boolean
@@ -87,6 +88,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const [isDragging, setIsDragging] = useState(false)
   const [openingTime, setOpeningTime] = useState('08:00')
   const [closingTime, setClosingTime] = useState('19:00')
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -326,36 +328,73 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
               />
             </div>
 
-            {/* Address Input */}
+            {/* Address Input — opens map picker */}
             <div className="mb-5">
-              <input
-                type="text"
-                placeholder="Address"
-                value={formDatas.address}
-                onChange={(e) => setFormDatas({ ...formDatas, address: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
-              />
+              <button
+                type="button"
+                onClick={() => setIsMapModalOpen(true)}
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border text-left flex items-center justify-between hover:border-purple-500 transition-colors"
+              >
+                <span className={formDatas.address ? 'text-white' : 'text-gray-500'}>
+                  {formDatas.address || 'Choisir une adresse sur la carte'}
+                </span>
+                <svg
+                  className="w-5 h-5 text-gray-400 flex-shrink-0 ml-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </button>
             </div>
 
-            {/* Latitude Input */}
+            {/* Map Picker Modal */}
+            <MapPickerModal
+              isOpen={isMapModalOpen}
+              onClose={() => setIsMapModalOpen(false)}
+              onConfirm={(location) => {
+                setFormDatas({
+                  ...formDatas,
+                  address: location.address,
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                })
+              }}
+              initialLat={formDatas.latitude}
+              initialLng={formDatas.longitude}
+            />
+
+            {/* Latitude Input — read-only, auto-filled from map */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Latitude"
-                value={formDatas.latitude || ''}
-                onChange={(e) => setFormDatas({ ...formDatas, latitude: Number(e.target.value) })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                value={formDatas.latitude?.toFixed(6) ?? ''}
+                readOnly
+                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-gray-400 text-base outline-none box-border cursor-default"
               />
             </div>
 
-            {/* Longitude Input */}
+            {/* Longitude Input — read-only, auto-filled from map */}
             <div className="mb-5">
               <input
                 type="text"
                 placeholder="Longitude"
-                value={formDatas.longitude || ''}
-                onChange={(e) => setFormDatas({ ...formDatas, longitude: Number(e.target.value) })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                value={formDatas.longitude?.toFixed(6) ?? ''}
+                readOnly
+                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-gray-400 text-base outline-none box-border cursor-default"
               />
             </div>
 
