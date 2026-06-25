@@ -146,6 +146,8 @@ describe('HomePage — logique NEXT number', () => {
         email: '',
         isActive: true,
         openStatus: ShopOpenStatus.OPEN,
+        hours: '',
+        closingTime: '',
         createdAt: new Date(),
         updatedAt: new Date(),
         managerId: 'm1',

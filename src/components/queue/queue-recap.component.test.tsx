@@ -36,6 +36,8 @@ const baseShop = {
   email: '',
   isActive: true,
   openStatus: ShopOpenStatus.CLOSED,
+  hours: '',
+  closingTime: '',
   createdAt: new Date(),
   updatedAt: new Date(),
   managerId: '',

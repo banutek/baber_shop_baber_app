@@ -14,6 +14,8 @@ const mockShop: IBarberShopDtoOut = {
   email: 'baraka@example.com',
   isActive: true,
   openStatus: 'CLOSED' as any,
+  hours: '',
+  closingTime: '',
   createdAt: new Date(),
   updatedAt: new Date(),
   managerId: 'user-1',
