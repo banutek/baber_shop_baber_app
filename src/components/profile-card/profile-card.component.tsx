@@ -5,6 +5,8 @@ import { ShopOpenStatus } from '../../dto'
 import { useAutoCloseShopHook, useUpdateShopStatusHook } from '../../hooks'
 import { useAuthStore, useShopStore } from '../../stores'
 import { prefixer } from '../../services'
+import { useMemo } from 'react'
+import { truncateAtNthComma } from '../../utils'
 
 export interface IProfileComponentProps {
   default_props?: boolean
@@ -17,6 +19,10 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const { currentShop } = useShopStore()
 
   const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
+  const shortLocation = useMemo(
+    () => currentShop?.address && truncateAtNthComma(currentShop?.address, 2),
+    [currentShop],
+  )
 
   // Fermeture automatique du salon à l'heure définie dans shop.hours
   useAutoCloseShopHook({
@@ -84,7 +90,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
           </div>
           <div>
             <span className="text-xs text-gray-400 block mb-0.5">Salon</span>
-            <span className="font-medium text-gray-900">{`${currentShop?.name} — ${currentShop?.address}`}</span>
+            <span className="font-medium text-gray-900">{`${currentShop?.name} — ${shortLocation}`}</span>
           </div>
         </div>
         <div className="flex items-center gap-2.5 py-2.5 border-b border-gray-200 text-xs text-gray-500">
