@@ -2,7 +2,6 @@ import type React from 'react'
 import { useEffect } from 'react'
 
 import {
-  ActivitySectionComponent,
   ProfileCardComponent,
   QueueRecapComponent,
   StatsRowComponent,
