@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { ShopOpenStatus } from '../../dto'
 import { useAutoCloseShopHook, useUpdateShopStatusHook } from '../../hooks'
 import { useAuthStore, useShopStore } from '../../stores'
+import { prefixer } from '../../services'
 
 export interface IProfileComponentProps {
   default_props?: boolean
@@ -56,12 +57,13 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-7 text-center relative">
         <div className="absolute inset-0 opacity-6">
           <div
-            className="w-full h-full"
+            className="w-full h-full bg-contain bg-center"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8a96e' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url(${prefixer.replace(/\/api\/v1\/?$/, '')}${currentShop?.profileImage})`,
             }}
           />
         </div>
+        <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative">
           <div className="relative inline-block mb-3.5">
             <div className="w-[84px] h-[84px] rounded-full bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center font-serif text-3xl text-white border-[3px] border-white/15 shadow-lg">
@@ -111,7 +113,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
           </div>
           <div>
             <span className="text-xs text-gray-400 block mb-0.5">Téléphone</span>
-            <span className="font-medium text-gray-900">+212 6 00 11 22 33</span>
+            <span className="font-medium text-gray-900">{currentShop?.phone}</span>
           </div>
         </div>
         <button className="w-full mt-4 py-2.5 rounded-lg border-2 border-amber-600 bg-transparent text-amber-700 font-sans text-sm font-semibold hover:bg-amber-50 transition-all duration-200 tracking-wide">

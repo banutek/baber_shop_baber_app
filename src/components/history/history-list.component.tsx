@@ -16,6 +16,7 @@ export const HistoryListComponent: React.FC<IHistoryListComponentProps> = () => 
     currentWaitingList?.waiting_list_numbers?.filter((n) =>
       [WaitingListNumberStatus.MISSING, WaitingListNumberStatus.COMPLETED].includes(n.status),
     ) ?? []
+
   return (
     <>
       <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5 pl-0.5">

@@ -165,7 +165,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
     const formDataToSend = new FormData()
     formDataToSend.append('name', formDatas.name)
     formDataToSend.append('address', formDatas.address)
-    formDataToSend.append('phone', formDatas.phone)
+    formDataToSend.append('phone', `${selectedCountry.dialCode} ${formDatas.phone}`)
     formDataToSend.append('hours', `${openingTime} — ${closingTime}`)
     formDataToSend.append('closingTime', closingTime)
 
