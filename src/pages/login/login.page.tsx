@@ -98,7 +98,7 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { setCurrentUser } = useAuthStore()
-  const { mutate: doLoginUser } = useLoginUserHook()
+  const { mutate: doLoginUser, isPending } = useLoginUserHook()
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -143,10 +143,8 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
             <BagIcon className="w-8 h-8 text-white" />
           </div>
 
-          <h1 className="text-white text-2xl font-semibold mb-2">Welcome Back!</h1>
-          <p className="text-gray-400 text-sm mb-8">
-            Build, test, and launch full-stack web and mobile apps
-          </p>
+          <h1 className="text-white text-2xl font-semibold mb-2">Bienvenue!</h1>
+          <p className="text-gray-400 text-sm mb-8">Veuillez entrer vos identifiants</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -182,9 +180,32 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
 
             <button
               type="submit"
-              className="w-full bg-white text-black font-medium rounded-full py-3.5 hover:bg-gray-100 transition-colors mt-2"
+              disabled={isPending}
+              className="w-full bg-white text-black font-medium rounded-full py-3.5 hover:bg-gray-100 transition-colors mt-2 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Login
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-black"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              )}
+              {isPending ? 'En cours...' : 'Se connecter'}
             </button>
           </form>
 
@@ -193,17 +214,20 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
               to="/forgot-password"
               className="text-white text-sm hover:text-gray-300 transition-colors"
             >
-              Forgot Password?
+              Mot de passe oublier?
             </Link>
           </div>
 
-          <div className="flex items-center gap-4 my-6">
-            <div className="flex-1 h-px bg-gray-800" />
-            <span className="text-gray-500 text-sm">or continue with</span>
-            <div className="flex-1 h-px bg-gray-800" />
-          </div>
+          <div className="flex-1 h-px bg-gray-800" />
 
-          <div className="flex justify-center gap-4">
+          {/***** / // TODO *****/}
+          {/* <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-gray-800" />
+            <span className="text-gray-500 text-sm">ou continuer avec</span>
+            <div className="flex-1 h-px bg-gray-800" />
+          </div> */}
+
+          {/* <div className="flex justify-center gap-4">
             <button
               onClick={handleGoogleLogin}
               className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
@@ -216,15 +240,16 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
             >
               <FacebookIcon className="w-6 h-6" />
             </button>
-          </div>
+          </div> */}
+          {/***** / // TODO *****/}
 
           <div className="text-center mt-8">
-            <p className="text-gray-400 text-sm mb-4">Don&apos;t have an account?</p>
+            <p className="text-gray-400 text-sm mb-4">Pas encore de compte?</p>
             <Link
               to="/register"
               className="block w-full bg-[#1a1a1a] text-white font-medium rounded-full py-3.5 hover:bg-[#252525] transition-colors"
             >
-              Create account
+              Créer compte
             </Link>
           </div>
         </div>

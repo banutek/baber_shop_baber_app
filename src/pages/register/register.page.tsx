@@ -55,7 +55,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const { mutate: doRegisterNewUser } = useRegisterNewUserHook()
+  const { mutate: doRegisterNewUser, isPending } = useRegisterNewUserHook()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -96,15 +96,15 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
 
   return (
     <GuestGuard>
-      <div className="min-h-screen bg-gradient-to-br from-purple-500 to-purple-800 flex items-center justify-center p-5 font-sans">
+      <div className="min-h-screen bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center p-5 font-sans">
         <div className="bg-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl overflow-visible">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-white text-3xl font-semibold mb-3 tracking-tight">
-              Create Account
+              Créer votre compte
             </h1>
             <p className="text-gray-400 text-base leading-relaxed m-0 max-w-sm mx-auto">
-              Build, test, and launch full-stack web and mobile apps — all in one flow.
+              — Veuillez remplir tout ces champs —
             </p>
           </div>
 
@@ -166,7 +166,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   placeholder="Phone number"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="flex-1 bg-transparent border-none p-4 text-white text-base outline-none"
+                  className="flex-1 bg-transparent border-none p-3 text-white text-base outline-none"
                 />
               </div>
             </div>
@@ -178,7 +178,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 placeholder="Prénom"
                 value={formData.first_name}
                 onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
               />
             </div>
 
@@ -189,7 +189,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 placeholder="Nom de famille"
                 value={formData.last_name}
                 onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
               />
             </div>
 
@@ -200,7 +200,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 placeholder="Email address"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
               />
             </div>
 
@@ -211,7 +211,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 placeholder="Address"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
               />
             </div>
 
@@ -223,7 +223,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   placeholder="Password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full bg-transparent border-none p-4 pr-12 text-white text-base outline-none box-border"
+                  className="w-full bg-transparent border-none p-3 pr-12 text-white text-base outline-none box-border"
                 />
                 <button
                   type="button"
@@ -243,7 +243,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   placeholder="Confirm password"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="w-full bg-transparent border-none p-4 pr-12 text-white text-base outline-none box-border"
+                  className="w-full bg-transparent border-none p-3 pr-12 text-white text-base outline-none box-border"
                 />
                 <button
                   type="button"
@@ -256,7 +256,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
             </div>
 
             {/* Terms Checkbox */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <label className="flex items-start text-gray-400 text-sm leading-relaxed cursor-pointer">
                 <input
                   type="checkbox"
@@ -275,26 +275,51 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   </a>
                 </span>
               </label>
-            </div>
+            </div> */}
 
             {/* Create Account Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-500 to-purple-800 border-none rounded-xl p-4 text-white text-base font-semibold cursor-pointer mb-6 transition-transform hover:-translate-y-0.5"
+              disabled={isPending}
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-800 border-none rounded-xl p-4 text-white text-base font-semibold cursor-pointer mb-6 transition-transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
             >
-              Create account
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              )}
+              {isPending ? 'Création en cours...' : 'Créer compte'}
             </button>
           </form>
+          <div className="flex-1 h-px bg-gray-700 my-6" />
 
+          {/***** TODO ******/}
           {/* Divider */}
-          <div className="flex items-center my-6 text-gray-400 text-sm">
+          {/* <div className="flex items-center my-6 text-gray-400 text-sm">
             <div className="flex-1 h-px bg-gray-700" />
-            <span className="mx-4">or continue with</span>
+            <span className="mx-4">ou continuer avec</span>
             <div className="flex-1 h-px bg-gray-700" />
-          </div>
+          </div> */}
 
           {/* Social Login Buttons */}
-          <div className="flex gap-3 mb-8">
+          {/* <div className="flex gap-3 mb-8">
             <button className="flex-1 flex items-center justify-center gap-2 bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-sm cursor-pointer transition-colors hover:bg-gray-700">
               <span className="text-lg">🔍</span>
               Google
@@ -303,16 +328,17 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
               <span className="text-lg">📘</span>
               Facebook
             </button>
-          </div>
+          </div> */}
+          {/***** TODO ******/}
 
           {/* Login Link */}
           <div className="text-center text-gray-400 text-sm">
-            Already have an account?{' '}
+            Déjà un compte?{' '}
             <button
               onClick={() => navigate('/login')}
-              className="bg-none border-none text-purple-500 text-sm cursor-pointer underline p-0"
+              className="bg-none border-none text-amber-500 text-sm cursor-pointer underline p-0"
             >
-              Login
+              Se connecter
             </button>
           </div>
         </div>

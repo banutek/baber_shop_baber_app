@@ -49,7 +49,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
   const { mutate: doUpdateWaitingListStatus } = useUpdateWaitingListStatusHook()
   const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
   const { data: waitingListData } = useGetWaitingListByShopHook(currentShop?.id as string)
-  const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
+  const { mutate: doUpdateListNumberStatus, isPending } = useUpdateListNumberStatusHook()
 
   useEffect(() => {
     if (waitingListData?.data?.waitingList) {
@@ -263,10 +263,37 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
                 disabled={currentWaitingList?.waiting_list_numbers?.length === 0}
               >
                 <button
-                  disabled={currentWaitingList?.waiting_list_numbers?.length === 0}
-                  className="w-full py-2.5 px-4 rounded-lg bg-gray-900 text-white font-sans text-sm font-semibold hover:bg-gray-800 transform hover:-translate-y-0.5 transition-all duration-180 shadow-lg disabled:bg-dark-card disabled:text-white/30 disabled:cursor-not-allowed disabled:hover:bg-dark-card"
+                  disabled={currentWaitingList?.waiting_list_numbers?.length === 0 || isPending}
+                  className="w-full py-2.5 px-4 rounded-lg bg-gray-900 text-white font-sans text-sm font-semibold hover:bg-gray-800 transform hover:-translate-y-0.5 transition-all duration-180 shadow-lg disabled:bg-dark-card disabled:text-white/30 disabled:cursor-not-allowed disabled:hover:bg-dark-card flex items-center justify-center gap-2"
                 >
-                  ✅ {isCurrentNumberGreaterThanZero ? 'Marquer terminé' : 'Débuter'}
+                  {isPending && (
+                    <svg
+                      className="animate-spin h-4 w-4 text-white/70"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                  )}
+                  ✅{' '}
+                  {isPending
+                    ? 'En cours...'
+                    : isCurrentNumberGreaterThanZero
+                      ? 'Marquer terminé'
+                      : 'Débuter'}
                 </button>
               </ConfirmTooltip>
             )}
@@ -276,8 +303,33 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
                 onConfirm={() => handleOpenService(MISSING)}
                 message="Êtes-vous sûr de vouloir passer ce client ? Il sera marqué comme absent."
               >
-                <button className="w-full py-2.5 px-4 rounded-lg bg-red-50 text-red-500 font-sans text-sm font-semibold hover:bg-red-500 hover:text-white transition-all duration-180">
-                  ⏭ &nbsp;Passer au suivant
+                <button
+                  disabled={isPending}
+                  className="w-full py-2.5 px-4 rounded-lg bg-red-50 text-red-500 font-sans text-sm font-semibold hover:bg-red-500 hover:text-white transition-all duration-180 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isPending && (
+                    <svg
+                      className="animate-spin h-4 w-4 text-red-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                  )}
+                  ⏭ {isPending ? 'En cours...' : ' Passer au suivant'}
                 </button>
               </ConfirmTooltip>
             )}

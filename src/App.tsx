@@ -23,7 +23,7 @@ function App() {
   const { showNextNumberModal, nextNumber, setShowNextNumberModal, setNextNumber } =
     useWaitingListNumberStore()
   const { currentWaitingList, setCurrentWaitingList } = useShopStore()
-  const { mutate: doUpdateListNumberStatus } = useUpdateListNumberStatusHook()
+  const { mutate: doUpdateListNumberStatus, isPending } = useUpdateListNumberStatusHook()
   const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
 
   const doCloseModal = () => {
@@ -155,8 +155,33 @@ function App() {
                 message="Êtes-vous sûr de vouloir marquer ce client comme absent ?"
                 className="flex-1"
               >
-                <button className="flex-1 py-3 px-4 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors">
-                  🚫 Absent
+                <button
+                  disabled={isPending}
+                  className="flex-1 py-3 px-4 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isPending && (
+                    <svg
+                      className="animate-spin h-4 w-4 text-red-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                  )}
+                  🚫 {isPending ? 'En cours...' : 'Absent'}
                 </button>
               </ConfirmTooltip>
               <ConfirmTooltip
@@ -166,8 +191,33 @@ function App() {
                 message="Êtes-vous sûr de vouloir servir ce client ?"
                 className="flex-1"
               >
-                <button className="flex-1 py-3 px-4 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors">
-                  ✅ Servir
+                <button
+                  disabled={isPending}
+                  className="flex-1 py-3 px-4 rounded-xl bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isPending && (
+                    <svg
+                      className="animate-spin h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                  )}
+                  ✅ {isPending ? 'En cours...' : 'Servir'}
                 </button>
               </ConfirmTooltip>
             </div>

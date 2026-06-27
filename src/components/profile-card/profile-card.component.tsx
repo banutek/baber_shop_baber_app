@@ -18,7 +18,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
   const { currentUser } = useAuthStore()
   const { currentShop } = useShopStore()
 
-  const { mutate: doUpdateShopStatus } = useUpdateShopStatusHook()
+  const { mutate: doUpdateShopStatus, isPending } = useUpdateShopStatusHook()
   const shortLocation = useMemo(
     () => currentShop?.address && truncateAtNthComma(currentShop?.address, 2),
     [currentShop],
@@ -127,9 +127,32 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
         </button>
         <button
           onClick={doLogout}
-          className="w-full mt-2.5 py-2.5 rounded-lg bg-red-500 text-white font-sans text-sm font-semibold hover:bg-red-600 transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-xl"
+          disabled={isPending}
+          className="w-full mt-2.5 py-2.5 rounded-lg bg-red-500 text-white font-sans text-sm font-semibold hover:bg-red-600 transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
         >
-          🚪 &nbsp; Se déconnecter
+          {isPending && (
+            <svg
+              className="animate-spin h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              />
+            </svg>
+          )}
+          {isPending ? 'Déconnexion...' : '🚪   Se déconnecter'}
         </button>
       </div>
     </div>

@@ -93,7 +93,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const { mutate: doCreateNewShop } = useCreateNewShopHook()
+  const { mutate: doCreateNewShop, isPending } = useCreateNewShopHook()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -202,15 +202,15 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gradient-to-br from-purple-500 to-purple-800 flex items-center justify-center p-5 font-sans">
+      <div className="min-h-screen bg-gradient-to-br from-amber-500 to-amber-800 flex items-center justify-center p-5 font-sans">
         <div className="bg-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl overflow-visible">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-white text-3xl font-semibold mb-3 tracking-tight">
-              Créer le salon
+              Création du salon
             </h1>
             <p className="text-gray-400 text-base leading-relaxed m-0 max-w-sm mx-auto">
-              Build, test, and launch full-stack web and mobile apps — all in one flow.
+              — Remplissez tous les champs ci-dessous —
             </p>
           </div>
 
@@ -268,10 +268,10 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 {/* Phone Input */}
                 <input
                   type="tel"
-                  placeholder="Phone number"
+                  placeholder="Teléphone salon"
                   value={formDatas.phone}
                   onChange={(e) => setFormDatas({ ...formDatas, phone: e.target.value })}
-                  className="flex-1 bg-transparent border-none p-4 text-white text-base outline-none"
+                  className="flex-1 bg-transparent border-none p-3 text-white text-base outline-none"
                 />
               </div>
             </div>
@@ -283,7 +283,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 placeholder="Nom du salon"
                 value={formDatas.name}
                 onChange={(e) => setFormDatas({ ...formDatas, name: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
               />
             </div>
 
@@ -294,7 +294,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 <select
                   value={openingTime}
                   onChange={(e) => setOpeningTime(e.target.value)}
-                  className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none appearance-none cursor-pointer"
+                  className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none appearance-none cursor-pointer"
                 >
                   {TIME_SLOTS.map((slot) => (
                     <option key={slot} value={slot}>
@@ -306,7 +306,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 <select
                   value={closingTime}
                   onChange={(e) => setClosingTime(e.target.value)}
-                  className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none appearance-none cursor-pointer"
+                  className="flex-1 bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none appearance-none cursor-pointer"
                 >
                   {TIME_SLOTS.map((slot) => (
                     <option key={slot} value={slot}>
@@ -324,7 +324,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 placeholder="Email address"
                 value={formDatas.email}
                 onChange={(e) => setFormDatas({ ...formDatas, email: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
               />
             </div>
 
@@ -333,7 +333,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
               <button
                 type="button"
                 onClick={() => setIsMapModalOpen(true)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-4 text-white text-base outline-none box-border text-left flex items-center justify-between hover:border-purple-500 transition-colors"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border text-left flex items-center justify-between hover:border-purple-500 transition-colors"
               >
                 <span className={formDatas.address ? 'text-white' : 'text-gray-500'}>
                   {formDatas.address || 'Choisir une adresse sur la carte'}
@@ -383,7 +383,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 placeholder="Latitude"
                 value={formDatas.latitude?.toFixed(6) ?? ''}
                 readOnly
-                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-gray-400 text-base outline-none box-border cursor-default"
+                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-3 text-gray-400 text-base outline-none box-border cursor-default"
               />
             </div>
 
@@ -394,7 +394,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 placeholder="Longitude"
                 value={formDatas.longitude?.toFixed(6) ?? ''}
                 readOnly
-                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-gray-400 text-base outline-none box-border cursor-default"
+                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-3 text-gray-400 text-base outline-none box-border cursor-default"
               />
             </div>
 
@@ -465,32 +465,44 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
               </div>
             </div>
 
+            {/* Divider */}
+            <div className="flex items-center my-6 text-gray-400 text-sm">
+              <div className="flex-1 h-px bg-gray-700" />
+              <span className="mx-4">---</span>
+              <div className="flex-1 h-px bg-gray-700" />
+            </div>
+
             {/* Create Account Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-500 to-purple-800 border-none rounded-xl p-4 text-white text-base font-semibold cursor-pointer mb-6 transition-transform hover:-translate-y-0.5"
+              disabled={isPending}
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-800 border-none rounded-xl p-4 text-white text-base font-semibold cursor-pointer mb-6 transition-transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
             >
-              Create account
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              )}
+              {isPending ? 'Création en cours...' : 'Valider création'}
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="flex items-center my-6 text-gray-400 text-sm">
-            <div className="flex-1 h-px bg-gray-700" />
-            <span className="mx-4">or continue with</span>
-            <div className="flex-1 h-px bg-gray-700" />
-          </div>
-
-          {/* Login Link */}
-          <div className="text-center text-gray-400 text-sm">
-            Already have an account?{' '}
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-none border-none text-purple-500 text-sm cursor-pointer underline p-0"
-            >
-              Login
-            </button>
-          </div>
         </div>
       </div>
     </AuthGuard>
