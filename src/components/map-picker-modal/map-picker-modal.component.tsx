@@ -245,7 +245,7 @@ export const MapPickerModal: React.FC<MapPickerModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-white text-xl sm:text-2xl leading-none p-1 shrink-0"
+            className="text-gray-400 hover:text-white text-xl sm:text-2xl leading-none p-1 shrink-0 cursor-pointer"
             aria-label="Fermer"
           >
             ×
@@ -285,7 +285,7 @@ export const MapPickerModal: React.FC<MapPickerModalProps> = ({
                   key={idx}
                   type="button"
                   onClick={() => handleSelectSuggestion(s)}
-                  className="w-full text-left px-3 py-2.5 sm:py-2 hover:bg-gray-700 transition-colors border-b border-gray-700/50 last:border-b-0"
+                  className="w-full text-left px-3 py-2.5 sm:py-2 hover:bg-gray-700 transition-colors border-b border-gray-700/50 last:border-b-0 cursor-pointer"
                 >
                   <span className="text-white text-xs sm:text-sm line-clamp-2">
                     {s.displayName}
@@ -331,7 +331,7 @@ export const MapPickerModal: React.FC<MapPickerModalProps> = ({
             type="button"
             onClick={handleUseCurrentLocation}
             disabled={isLocating}
-            className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 border border-gray-700 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 border border-gray-700 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 text-white text-xs sm:text-sm transition-colors cursor-pointer"
           >
             <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -375,7 +375,7 @@ export const MapPickerModal: React.FC<MapPickerModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:flex-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl py-2.5 sm:py-3 text-white text-xs sm:text-sm font-medium transition-colors order-2 sm:order-1"
+            className="w-full sm:flex-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl py-2.5 sm:py-3 text-white text-xs sm:text-sm font-medium transition-colors order-2 sm:order-1 cursor-pointer"
           >
             Annuler
           </button>
@@ -383,7 +383,7 @@ export const MapPickerModal: React.FC<MapPickerModalProps> = ({
             type="button"
             onClick={handleConfirm}
             disabled={!markerPosition || !address}
-            className="w-full sm:flex-1 bg-gradient-to-r from-purple-500 to-purple-800 hover:from-purple-600 hover:to-purple-900 disabled:opacity-50 border-none rounded-xl py-2.5 sm:py-3 text-white text-xs sm:text-sm font-semibold transition-colors order-1 sm:order-2"
+            className="w-full sm:flex-1 bg-gradient-to-r from-purple-500 to-purple-800 hover:from-purple-600 hover:to-purple-900 disabled:opacity-50 border-none rounded-xl py-2.5 sm:py-3 text-white text-xs sm:text-sm font-semibold transition-colors order-1 sm:order-2 cursor-pointer"
           >
             Confirmer
           </button>

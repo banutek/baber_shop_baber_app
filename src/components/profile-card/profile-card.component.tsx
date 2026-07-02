@@ -60,7 +60,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-slideUp">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-7 text-center relative">
+      <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-5 sm:p-7 text-center relative">
         <div className="absolute inset-0 opacity-6">
           <div
             className="w-full h-full bg-contain bg-center"
@@ -83,14 +83,14 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
           </div>
         </div>
       </div>
-      <div className="p-5">
+      <div className="p-3.5 sm:p-5">
         <div className="flex items-center gap-2.5 py-2.5 border-b border-gray-200 text-xs text-gray-500">
           <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-sm flex-shrink-0">
             📍
           </div>
-          <div>
-            <span className="text-xs text-gray-400 block mb-0.5">Salon</span>
-            <span className="font-medium text-gray-900">{`${currentShop?.name} — ${shortLocation}`}</span>
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-gray-400 block mb-0.5">Salon</span>
+            <span className="font-medium text-gray-900 truncate block">{`${currentShop?.name} — ${shortLocation}`}</span>
           </div>
         </div>
         <div className="flex items-center gap-2.5 py-2.5 border-b border-gray-200 text-xs text-gray-500">
@@ -122,13 +122,13 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
             <span className="font-medium text-gray-900">{currentShop?.phone}</span>
           </div>
         </div>
-        <button className="w-full mt-4 py-2.5 rounded-lg border-2 border-amber-600 bg-transparent text-amber-700 font-sans text-sm font-semibold hover:bg-amber-50 transition-all duration-200 tracking-wide">
+        <button className="w-full mt-4 py-2.5 rounded-lg border-2 border-amber-600 bg-transparent text-amber-700 font-sans text-sm font-semibold hover:bg-amber-50 transition-all duration-200 tracking-wide cursor-pointer">
           ✏️ &nbsp; Modifier le profil
         </button>
         <button
           onClick={doLogout}
           disabled={isPending}
-          className="w-full mt-2.5 py-2.5 rounded-lg bg-red-500 text-white font-sans text-sm font-semibold hover:bg-red-600 transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+          className="w-full mt-2.5 py-2.5 rounded-lg bg-red-500 text-white font-sans text-sm font-semibold hover:bg-red-600 transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2 cursor-pointer"
         >
           {isPending && (
             <svg

@@ -77,7 +77,7 @@ export const NotificationBell: React.FC<INotificationBellProps> = ({ deviceId, s
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        className="w-9 h-9 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center text-base hover:bg-amber-50 hover:text-amber-700 transition-all duration-200 relative"
+        className="w-9 h-9 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center text-base hover:bg-amber-50 hover:text-amber-700 transition-all duration-200 relative cursor-pointer"
         onClick={toggleDropdown}
       >
         🔔

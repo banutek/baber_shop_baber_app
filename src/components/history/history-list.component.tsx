@@ -19,7 +19,7 @@ export const HistoryListComponent: React.FC<IHistoryListComponentProps> = () => 
 
   return (
     <>
-      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5 pl-0.5">
+      <div className="text-[11px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5 pl-0.5">
         {`  Historique · ${alreadyProcessedNumbers.length} personnes déjà passées`}
       </div>
       <div className="flex flex-col gap-0">

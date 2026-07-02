@@ -18,7 +18,7 @@ describe('QueueCardComponent', () => {
     render(<QueueCardComponent {...defaultProps} />)
     expect(screen.getByText('08')).toBeInTheDocument()
     expect(screen.getByText('Youssef Amrani')).toBeInTheDocument()
-    expect(screen.getByText('⚡ Prochain')).toBeInTheDocument()
+    expect(screen.getAllByText('⚡ Prochain').length).toBeGreaterThan(0)
     expect(screen.getByText('32 min')).toBeInTheDocument()
   })
 

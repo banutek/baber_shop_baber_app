@@ -151,7 +151,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   <button
                     type="button"
                     onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                    className="flex items-center px-4 border-r border-gray-700 bg-gray-850 hover:bg-gray-700 transition-colors"
+                    className="flex items-center px-4 border-r border-gray-700 bg-gray-850 hover:bg-gray-700 transition-colors cursor-pointer"
                   >
                     <span className="text-xl mr-2">{selectedCountry.flag}</span>
                     <span className="text-gray-400 text-sm">{selectedCountry.dialCode}</span>
@@ -181,7 +181,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                             setSelectedCountry(country)
                             setShowCountryDropdown(false)
                           }}
-                          className="w-full flex items-center px-4 py-3 hover:bg-gray-700 transition-colors text-left"
+                          className="w-full flex items-center px-4 py-3 hover:bg-gray-700 transition-colors text-left cursor-pointer"
                         >
                           <span className="text-xl mr-3">{country.flag}</span>
                           <div className="flex-1">

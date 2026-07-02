@@ -100,7 +100,7 @@ export const CurrentBannerComponent: React.FC<ICurrentBannerComponentProps> = ()
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 flex items-center gap-5 mb-5 relative animate-fadeUp">
+    <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-3.5 sm:p-5 flex flex-wrap items-center gap-3 sm:gap-5 mb-5 relative animate-fadeUp">
       <div className="absolute inset-0">
         <div
           className="w-full h-full"
@@ -109,10 +109,10 @@ export const CurrentBannerComponent: React.FC<ICurrentBannerComponentProps> = ()
           }}
         />
       </div>
-      <div className="font-serif text-6xl text-amber-600 leading-none relative">
+      <div className="font-serif text-4xl sm:text-6xl text-amber-600 leading-none relative">
         {currentNumber?.value ?? 'Aucun'}
       </div>
-      <div className="flex-1 relative">
+      <div className="flex-1 min-w-0 relative">
         {currentNumber?.status === COMPLETED ? (
           <div className="text-xs text-green-400 font-bold uppercase tracking-wide">
             Client servis
@@ -124,13 +124,13 @@ export const CurrentBannerComponent: React.FC<ICurrentBannerComponentProps> = ()
         {/* <div className="text-xs text-white/50">Android · Scanné à 10:38 · il y a 6 min</div> */}
         {currentNumber && (
           <>
-            <div className="text-lg font-semibold text-white my-1">{`Client #${currentDevice}`}</div>
-            <div className="text-xs text-white/50">{`${currentNumber?.device?.platform} · il y'a ${currentNumberElapsedMin} min`}</div>
+            <div className="text-base sm:text-lg font-semibold text-white my-0.5 sm:my-1 truncate">{`Client #${currentDevice}`}</div>
+            <div className="text-[10px] sm:text-xs text-white/50">{`${currentNumber?.device?.platform} · il y'a ${currentNumberElapsedMin} min`}</div>
           </>
         )}
       </div>
       {pathname != '/history' && (
-        <div className="flex flex-col gap-2 relative max-sm:flex-row max-sm:w-full">
+        <div className="flex flex-col gap-2 relative w-full sm:w-auto mt-0.5 sm:mt-0">
           {(currentNumber?.status == IN_PROGRESS || firstNumberStatus == CREATED) && (
             <ConfirmTooltip
               onConfirm={() =>
@@ -138,7 +138,7 @@ export const CurrentBannerComponent: React.FC<ICurrentBannerComponentProps> = ()
               }
               message="Êtes-vous sûr de vouloir marquer ce client comme terminé ?"
             >
-              <button className="px-4.5 py-2 rounded-lg bg-amber-600 text-gray-900 font-sans text-xs font-semibold hover:bg-amber-500 transform hover:-translate-y-0.5 transition-all duration-180 whitespace-nowrap">
+              <button className="px-3 sm:px-4.5 py-1.5 sm:py-2 rounded-lg bg-amber-600 text-gray-900 font-sans text-[11px] sm:text-xs font-semibold hover:bg-amber-500 transform hover:-translate-y-0.5 transition-all duration-180 whitespace-nowrap cursor-pointer">
                 ✅ Terminé
               </button>
             </ConfirmTooltip>
@@ -148,7 +148,7 @@ export const CurrentBannerComponent: React.FC<ICurrentBannerComponentProps> = ()
               onConfirm={() => handleOpenService(MISSING)}
               message="Êtes-vous sûr de vouloir passer ce client ?"
             >
-              <button className="px-4.5 py-2 rounded-lg bg-white/10 text-white border border-white/20 font-sans text-xs font-semibold hover:bg-white/18 transition-all duration-180 whitespace-nowrap">
+              <button className="px-3 sm:px-4.5 py-1.5 sm:py-2 rounded-lg bg-white/10 text-white border border-white/20 font-sans text-[11px] sm:text-xs font-semibold hover:bg-white/18 transition-all duration-180 whitespace-nowrap cursor-pointer">
                 ⏭ Passer au suivant
               </button>
             </ConfirmTooltip>

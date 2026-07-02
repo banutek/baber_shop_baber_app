@@ -187,7 +187,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
 
   return (
     <div className="bg-white rounded-2xl shadow-lg animate-slideUp">
-      <div className="flex items-center justify-between px-[22px] py-[18px] border-b border-gray-200">
+      <div className="flex items-center justify-between px-4 sm:px-[22px] py-3.5 sm:py-[18px] border-b border-gray-200">
         <div>
           <div className="font-serif text-base text-gray-900">File d&rsquo;attente</div>
           <div className="text-xs text-red-400 uppercase">
@@ -213,26 +213,26 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
         )}
       </div>
       {currentShop?.openStatus === ShopOpenStatus.OPEN && (
-        <div className="p-[18px]">
+        <div className="p-3.5 sm:p-[18px]">
           {isCurrentNumberGreaterThanZero ? (
-            <div className="flex items-center gap-3.5 bg-gray-50 rounded-lg p-3.5 mb-4">
-              <div className="font-serif text-5xl text-amber-700 leading-none">
+            <div className="flex items-center gap-2.5 sm:gap-3.5 bg-gray-50 rounded-lg p-2.5 sm:p-3.5 mb-4">
+              <div className="font-serif text-4xl sm:text-5xl text-amber-700 leading-none">
                 {currentWaitingList?.current_number}
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 {currentNumber?.status == IN_PROGRESS ? (
-                  <div className="text-xs text-gray-400 uppercase tracking-wide">Client actuel</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Client actuel</div>
                 ) : currentNumber?.status == COMPLETED ? (
-                  <div className="text-xs text-green-400 font-bold uppercase tracking-wide">
+                  <div className="text-[10px] sm:text-xs text-green-400 font-bold uppercase tracking-wide">
                     Client servit
                   </div>
                 ) : (
-                  <div className="text-xs text-red-400 font-bold uppercase tracking-wide">
+                  <div className="text-[10px] sm:text-xs text-red-400 font-bold uppercase tracking-wide">
                     Client sauté
                   </div>
                 )}
-                <div className="text-base font-semibold text-gray-900 my-0.5">{`Client #${currentDevice}`}</div>
-                <div className="text-xs text-gray-400">
+                <div className="text-sm sm:text-base font-semibold text-gray-900 my-0.5 truncate">{`Client #${currentDevice}`}</div>
+                <div className="text-[10px] sm:text-xs text-gray-400">
                   {currentNumberElapsedMin !== null
                     ? `Scanné il y a ${currentNumberElapsedMin} min`
                     : ''}
@@ -248,7 +248,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
               </div>
             </div>
           )}
-          <div className="flex gap-2.5">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5">
             {(currentNumber?.status == IN_PROGRESS || firstNumberStatus == CREATED) && (
               <ConfirmTooltip
                 className="flex-1"
@@ -264,7 +264,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
               >
                 <button
                   disabled={currentWaitingList?.waiting_list_numbers?.length === 0 || isPending}
-                  className="w-full py-2.5 px-4 rounded-lg bg-gray-900 text-white font-sans text-sm font-semibold hover:bg-gray-800 transform hover:-translate-y-0.5 transition-all duration-180 shadow-lg disabled:bg-dark-card disabled:text-white/30 disabled:cursor-not-allowed disabled:hover:bg-dark-card flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 rounded-lg bg-gray-900 text-white font-sans text-sm font-semibold hover:bg-gray-800 transform hover:-translate-y-0.5 transition-all duration-180 shadow-lg disabled:bg-dark-card disabled:text-white/30 disabled:cursor-not-allowed disabled:hover:bg-dark-card flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isPending && (
                     <svg
@@ -305,7 +305,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
               >
                 <button
                   disabled={isPending}
-                  className="w-full py-2.5 px-4 rounded-lg bg-red-50 text-red-500 font-sans text-sm font-semibold hover:bg-red-500 hover:text-white transition-all duration-180 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 rounded-lg bg-red-50 text-red-500 font-sans text-sm font-semibold hover:bg-red-500 hover:text-white transition-all duration-180 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isPending && (
                     <svg
@@ -359,22 +359,22 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
           {currentWaitingList?.waiting_list_numbers?.map((number, index) => (
             <div
               key={index}
-              className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default"
+              className="flex items-center gap-2 sm:gap-3.5 py-2.5 sm:py-3 px-4 sm:px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default"
             >
               <div
                 className={`w-8 h-8 rounded-full ${statusListNumberConfig[number.status]?.badgeColor} flex items-center justify-center text-sm font-semibold flex-shrink-0`}
               >
                 {number.value}
               </div>
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-900">Client #{number.deviceId}</div>
-                <div className="text-xs text-gray-400">
+              <div className="flex-1 min-w-0">
+                <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">Client #{number.deviceId}</div>
+                <div className="text-[10px] sm:text-xs text-gray-400">
                   {number?.device?.platform} · Tiré à{' '}
                   {new Date(number.createdAt).toLocaleTimeString('fr-FR')}
                 </div>
               </div>
               <span
-                className={`text-xs font-semibold py-0.5 px-2.5 rounded-full ${statusListNumberConfig[number?.status]?.className} ml-2`}
+                className={`text-[10px] sm:text-xs font-semibold py-0.5 px-1.5 sm:px-2.5 rounded-full whitespace-nowrap flex-shrink-0 ${statusListNumberConfig[number?.status]?.className} ml-1 sm:ml-2`}
               >
                 {statusListNumberConfig[number?.status]?.label}
               </span>
@@ -393,8 +393,8 @@ const QueueItemElapsedMin: React.FC<{ createdAt: Date | string }> = ({ createdAt
   const elapsed = useElapsedMinutes(createdAt)
 
   if (elapsed === null) {
-    return <div className="text-xs text-gray-400 ml-auto" />
+    return <div className="text-[10px] sm:text-xs text-gray-400 ml-auto flex-shrink-0" />
   }
 
-  return <div className="text-xs text-gray-400 ml-auto">{elapsed} min</div>
+  return <div className="text-[10px] sm:text-xs text-gray-400 ml-auto flex-shrink-0 whitespace-nowrap">{elapsed} min</div>
 }

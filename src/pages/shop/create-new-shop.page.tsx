@@ -251,7 +251,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                   <button
                     type="button"
                     onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                    className="flex items-center px-4 border-r border-gray-700 bg-gray-850 hover:bg-gray-700 transition-colors"
+                    className="flex items-center px-4 border-r border-gray-700 bg-gray-850 hover:bg-gray-700 transition-colors cursor-pointer"
                   >
                     <span className="text-xl mr-2">{selectedCountry.flag}</span>
                     <span className="text-gray-400 text-sm">{selectedCountry.dialCode}</span>
@@ -281,7 +281,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                             setSelectedCountry(country)
                             setShowCountryDropdown(false)
                           }}
-                          className="w-full flex items-center px-4 py-3 hover:bg-gray-700 transition-colors text-left"
+                          className="w-full flex items-center px-4 py-3 hover:bg-gray-700 transition-colors text-left cursor-pointer"
                         >
                           <span className="text-xl mr-3">{country.flag}</span>
                           <div className="flex-1">
@@ -371,7 +371,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
               <button
                 type="button"
                 onClick={() => setIsMapModalOpen(true)}
-                className={`w-full border rounded-xl p-3 text-base outline-none box-border text-left flex items-center justify-between transition-colors ${
+                className={`w-full border rounded-xl p-3 text-base outline-none box-border text-left flex items-center justify-between transition-colors cursor-pointer ${
                   fieldErrors.address
                     ? 'border-red-500 bg-gray-800'
                     : 'border-gray-700 bg-gray-800 hover:border-purple-500'
@@ -477,7 +477,7 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                         e.stopPropagation()
                         removeImage()
                       }}
-                      className="absolute top-0 right-1/4 transform translate-x-12 -translate-y-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                      className="absolute top-0 right-1/4 transform translate-x-12 -translate-y-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors cursor-pointer"
                     >
                       ×
                     </button>

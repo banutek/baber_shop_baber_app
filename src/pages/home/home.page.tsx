@@ -125,7 +125,7 @@ export const HomePage: React.FC<IHomePageProps> = () => {
 
         <TopBarComponent notificationShopId={currentShop?.id} />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-6xl mx-auto px-6 py-7">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-6xl mx-auto px-4 sm:px-6 py-7">
           {/* Main Content */}
           <main className="md:col-span-8 flex flex-col gap-5">
             <QueueRecapComponent onOpenNextNumberModal={handleOpenNextNumberModal} />

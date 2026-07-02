@@ -33,7 +33,7 @@ export const ToastContainer: React.FC = () => {
           <p className="text-sm flex-1">{toast.message}</p>
           <button
             onClick={() => removeToast(toast.id)}
-            className="text-white/80 hover:text-white flex-shrink-0 text-lg leading-none"
+            className="text-white/80 hover:text-white flex-shrink-0 text-lg leading-none cursor-pointer"
             aria-label="Fermer"
           >
             ×

@@ -111,7 +111,7 @@ export const ConfirmTooltip: React.FC<IConfirmTooltipProps> = ({
 
   return (
     <div ref={triggerRef} className={`relative ${className}`}>
-      <div onClick={handleMainClick} className="w-full">
+      <div onClick={handleMainClick} className="w-full cursor-pointer">
         {children}
       </div>
 
@@ -127,13 +127,13 @@ export const ConfirmTooltip: React.FC<IConfirmTooltipProps> = ({
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={() => setShowConfirm(false)}
-                  className="px-4 py-1.5 rounded-lg bg-gray-700 text-white text-xs font-semibold hover:bg-gray-600 transition-colors"
+                  className="px-4 py-1.5 rounded-lg bg-gray-700 text-white text-xs font-semibold hover:bg-gray-600 transition-colors cursor-pointer"
                 >
                   {cancelLabel}
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className="px-4 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-semibold hover:bg-amber-500 transition-colors"
+                  className="px-4 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-semibold hover:bg-amber-500 transition-colors cursor-pointer"
                 >
                   {confirmLabel}
                 </button>
