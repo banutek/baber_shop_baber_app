@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 
-import { ConfirmTooltip } from './components'
+import { ConfirmTooltip, ToastContainer } from './components'
 import { WaitingListNumberStatus } from './dto'
 import {
   type IUpdateListNumberStatusHookParams,
@@ -71,8 +71,8 @@ function App() {
           doCloseModal()
         }
       },
-      onError: (error) => {
-        console.log('List number status not updated', error)
+      onError: () => {
+        // L'interceptor global affiche déjà le toast d'erreur
       },
     })
   }
@@ -91,14 +91,15 @@ function App() {
         setNextNumber(null)
         setCurrentWaitingList(data?.data?.waitingList)
       },
-      onError: (error) => {
-        console.log('Waiting list infos not updated', error)
+      onError: () => {
+        // L'interceptor global affiche déjà le toast d'erreur
       },
     })
   }
 
   return (
     <>
+      <ToastContainer />
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />

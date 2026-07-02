@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { type INewUserDtoIn, RoleEnum } from '../../dto'
 import { GuestGuard } from '../../guards'
 import { useRegisterNewUserHook } from '../../hooks'
+import { useToastStore } from '../../stores'
+import { getFieldErrors, registerSchema, type RegisterFormData } from '../../utils'
 
 export interface IRegisterPageProps {
   default_props?: boolean
@@ -41,7 +43,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [showCountryDropdown, setShowCountryDropdown] = useState(false)
-  const [selectedCountry, setSelectedCountry] = useState(countries[0]) // Nigeria by default
+  const [selectedCountry, setSelectedCountry] = useState(countries[0])
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -52,28 +54,43 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
     confirmPassword: '',
     agreeTerms: false,
   })
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof RegisterFormData | 'phone', string>>
+  >({})
 
   const dropdownRef = useRef<HTMLDivElement>(null)
-
+  const addToast = useToastStore((s) => s.addToast)
   const { mutate: doRegisterNewUser, isPending } = useRegisterNewUserHook()
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowCountryDropdown(false)
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
+
+    // Construire les données à valider
+    const validationData: RegisterFormData = {
+      firstName: formData.first_name,
+      lastName: formData.last_name,
+      email: formData.email,
+      phone: `${selectedCountry.dialCode} ${formData.phone}`,
+      address: formData.address,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      agreeTerms: formData.agreeTerms,
+    }
+
+    const errors = getFieldErrors(registerSchema, validationData)
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
+
     const requestDatas: INewUserDtoIn = {
       firstName: formData.first_name,
       lastName: formData.last_name,
@@ -83,15 +100,30 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
       address: formData.address,
       role: RoleEnum.BARBER,
     }
+
     doRegisterNewUser(requestDatas, {
-      onSuccess: (data) => {
-        console.log('User registered successfully:', data.data.user)
+      onSuccess: () => {
+        addToast('Compte créé avec succès ! Vous pouvez vous connecter.', 'success')
         navigate('/login')
       },
       onError: (error) => {
-        console.error('Error registering user:', error)
+        const axiosError = error as { response?: { status?: number; data?: { message?: string } } }
+        if (axiosError?.response?.status === 409) {
+          setFieldErrors({ email: 'Cet email est déjà utilisé' })
+        } else if (axiosError?.response?.status === 400 || axiosError?.response?.status === 422) {
+          const backendMsg = axiosError?.response?.data?.message
+          addToast(backendMsg ?? 'Données invalides, veuillez vérifier le formulaire', 'error')
+        }
       },
     })
+  }
+
+  // Helper pour mettre à jour un champ et effacer son erreur
+  const updateField = (field: string, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    if (fieldErrors[field as keyof typeof fieldErrors]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
   }
 
   return (
@@ -111,7 +143,9 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
           <form onSubmit={handleSubmit}>
             {/* Phone Number Input */}
             <div className="mb-5">
-              <div className="flex bg-gray-800 rounded-xl border border-gray-700 relative">
+              <div
+                className={`flex bg-gray-800 rounded-xl border relative ${fieldErrors.phone ? 'border-red-500' : 'border-gray-700'}`}
+              >
                 {/* Country Selector Dropdown */}
                 <div className="relative" ref={dropdownRef}>
                   <button
@@ -165,10 +199,13 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   type="tel"
                   placeholder="Phone number"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => updateField('phone', e.target.value)}
                   className="flex-1 bg-transparent border-none p-3 text-white text-base outline-none"
                 />
               </div>
+              {fieldErrors.phone && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.phone}</p>
+              )}
             </div>
 
             {/* First name Input */}
@@ -177,9 +214,12 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="text"
                 placeholder="Prénom"
                 value={formData.first_name}
-                onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
+                onChange={(e) => updateField('firstName', e.target.value)}
+                className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.firstName ? 'border-red-500' : 'border-gray-700'}`}
               />
+              {fieldErrors.firstName && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.firstName}</p>
+              )}
             </div>
 
             {/* Last name Input */}
@@ -188,9 +228,12 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="text"
                 placeholder="Nom de famille"
                 value={formData.last_name}
-                onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
+                onChange={(e) => updateField('lastName', e.target.value)}
+                className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.lastName ? 'border-red-500' : 'border-gray-700'}`}
               />
+              {fieldErrors.lastName && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.lastName}</p>
+              )}
             </div>
 
             {/* Email Input */}
@@ -199,9 +242,12 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="email"
                 placeholder="Email address"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
+                onChange={(e) => updateField('email', e.target.value)}
+                className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.email ? 'border-red-500' : 'border-gray-700'}`}
               />
+              {fieldErrors.email && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.email}</p>
+              )}
             </div>
 
             {/* Address Input */}
@@ -210,19 +256,24 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="text"
                 placeholder="Address"
                 value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
+                onChange={(e) => updateField('address', e.target.value)}
+                className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.address ? 'border-red-500' : 'border-gray-700'}`}
               />
+              {fieldErrors.address && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.address}</p>
+              )}
             </div>
 
             {/* Password Input */}
             <div className="mb-5">
-              <div className="relative bg-gray-800 rounded-xl border border-gray-700">
+              <div
+                className={`relative bg-gray-800 rounded-xl border ${fieldErrors.password ? 'border-red-500' : 'border-gray-700'}`}
+              >
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) => updateField('password', e.target.value)}
                   className="w-full bg-transparent border-none p-3 pr-12 text-white text-base outline-none box-border"
                 />
                 <button
@@ -233,16 +284,21 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
               </div>
+              {fieldErrors.password && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.password}</p>
+              )}
             </div>
 
             {/* Confirm Password Input */}
             <div className="mb-6">
-              <div className="relative bg-gray-800 rounded-xl border border-gray-700">
+              <div
+                className={`relative bg-gray-800 rounded-xl border ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-gray-700'}`}
+              >
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm password"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  onChange={(e) => updateField('confirmPassword', e.target.value)}
                   className="w-full bg-transparent border-none p-3 pr-12 text-white text-base outline-none box-border"
                 />
                 <button
@@ -253,6 +309,9 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                   {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
               </div>
+              {fieldErrors.confirmPassword && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.confirmPassword}</p>
+              )}
             </div>
 
             {/* Terms Checkbox */}

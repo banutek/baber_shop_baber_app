@@ -1,5 +1,47 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import axios, { type AxiosRequestConfig, type AxiosResponse, type AxiosError } from 'axios'
+
+// ─── Interceptor global ──────────────────────────────────────────────────────
+
+axios.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError<{ message?: string; error?: string }>) => {
+    // Essaie d'extraire un message lisible
+    const backendMessage =
+      (error.response?.data as { message?: string })?.message ??
+      (error.response?.data as { error?: string })?.error
+
+    // Import dynamique pour éviter la dépendance circulaire
+    import('../stores/toast').then(({ useToastStore }) => {
+      if (error.response?.status === 401) {
+        // 401 = non authentifié. On ne montre pas de toast ici :
+        // - Sur /login, c'est le formulaire qui affiche l'erreur champ.
+        // - Ailleurs, on redirige vers /login silencieusement.
+        localStorage.removeItem('user')
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login'
+        }
+      } else if (error.response?.status === 403) {
+        useToastStore.getState().addToast('Accès non autorisé', 'error')
+      } else if (error.response?.status === 409) {
+        useToastStore
+          .getState()
+          .addToast(backendMessage ?? 'Conflit : cette ressource existe déjà', 'warning')
+      } else if (error.response?.status && error.response.status >= 500) {
+        useToastStore
+          .getState()
+          .addToast(backendMessage ?? 'Erreur serveur, veuillez réessayer', 'error')
+      } else if (error.response?.status === 400 || error.response?.status === 422) {
+        // 400/422 = erreur de validation — laissé au formulaire
+      } else if (error.code === 'ERR_NETWORK' || !error.response) {
+        useToastStore.getState().addToast('Problème de connexion réseau', 'error')
+      }
+      // Pas de catch-all : chaque onError de formulaire gère ses propres messages.
+    })
+
+    return Promise.reject(error)
+  },
+)
 
 class BaseMethods {
   ////////////////// Internal usage //////////////////////

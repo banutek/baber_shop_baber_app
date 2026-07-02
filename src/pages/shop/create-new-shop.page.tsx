@@ -6,6 +6,8 @@ import { type INewBarberShopDtoIn } from '../../dto'
 import { AuthGuard } from '../../guards'
 import { useCreateNewShopHook } from '../../hooks'
 import { MapPickerModal } from '../../components/map-picker-modal/map-picker-modal.component'
+import { useToastStore } from '../../stores'
+import { createShopSchema, getFieldErrors, type CreateShopFormData } from '../../utils'
 
 export interface ICreateNewShopProps {
   default_props?: boolean
@@ -73,7 +75,7 @@ const TIME_SLOTS = generateTimeSlots()
 export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const navigate = useNavigate()
   const [showCountryDropdown, setShowCountryDropdown] = useState(false)
-  const [selectedCountry, setSelectedCountry] = useState(countries[0]) // Nigeria by default
+  const [selectedCountry, setSelectedCountry] = useState(countries[0])
   const [formDatas, setFormDatas] = useState<INewBarberShopDtoIn>({
     name: '',
     address: '',
@@ -89,9 +91,13 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const [openingTime, setOpeningTime] = useState('08:00')
   const [closingTime, setClosingTime] = useState('19:00')
   const [isMapModalOpen, setIsMapModalOpen] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof CreateShopFormData | 'phone', string>>
+  >({})
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const addToast = useToastStore((s) => s.addToast)
 
   const { mutate: doCreateNewShop, isPending } = useCreateNewShopHook()
 
@@ -102,11 +108,8 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
         setShowCountryDropdown(false)
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const handleImageUpload = (file: File) => {
@@ -161,6 +164,19 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Validation Zod
+    const validationData: CreateShopFormData = {
+      name: formDatas.name,
+      address: formDatas.address,
+      phone: `${selectedCountry.dialCode} ${formDatas.phone}`,
+      email: formDatas.email || '',
+      openingTime,
+      closingTime,
+    }
+    const errors = getFieldErrors(createShopSchema, validationData)
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
+
     // Créer FormData pour l'envoi du fichier
     const formDataToSend = new FormData()
     formDataToSend.append('name', formDatas.name)
@@ -185,19 +201,30 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
       formDataToSend.append('profileImage', formDatas.profileImage)
     }
 
-    console.log('Form submitted with FormData:', formDataToSend)
     doCreateNewShop(formDataToSend, {
       onSuccess: (data) => {
-        console.log('Shop created successfully:', data.data.shop)
+        addToast('Salon créé avec succès !', 'success')
         const connectedUser = JSON.parse(localStorage.getItem('user') ?? '{}')
         connectedUser.user.manager_barber_shop = data.data.shop
         localStorage.setItem('user', JSON.stringify(connectedUser))
         navigate('/')
       },
       onError: (error) => {
-        console.error('Error creating shop:', error)
+        const axiosError = error as { response?: { status?: number; data?: { message?: string } } }
+        if (axiosError?.response?.status === 400 || axiosError?.response?.status === 422) {
+          const backendMsg = axiosError?.response?.data?.message
+          addToast(backendMsg ?? 'Données invalides, veuillez vérifier le formulaire', 'error')
+        }
       },
     })
+  }
+
+  // Helper pour mettre à jour un champ formDatas et effacer son erreur
+  const updateField = (field: keyof INewBarberShopDtoIn, value: string) => {
+    setFormDatas((prev) => ({ ...prev, [field]: value }))
+    if (fieldErrors[field as keyof typeof fieldErrors]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
   }
 
   return (
@@ -216,7 +243,9 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-5">
-              <div className="flex bg-gray-800 rounded-xl border border-gray-700 relative">
+              <div
+                className={`flex bg-gray-800 rounded-xl border relative ${fieldErrors.phone ? 'border-red-500' : 'border-gray-700'}`}
+              >
                 {/* Country Selector Dropdown */}
                 <div className="relative" ref={dropdownRef}>
                   <button
@@ -270,10 +299,13 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                   type="tel"
                   placeholder="Teléphone salon"
                   value={formDatas.phone}
-                  onChange={(e) => setFormDatas({ ...formDatas, phone: e.target.value })}
+                  onChange={(e) => updateField('phone', e.target.value)}
                   className="flex-1 bg-transparent border-none p-3 text-white text-base outline-none"
                 />
               </div>
+              {fieldErrors.phone && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.phone}</p>
+              )}
             </div>
 
             {/* Barbershop name Input */}
@@ -282,9 +314,12 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 type="text"
                 placeholder="Nom du salon"
                 value={formDatas.name}
-                onChange={(e) => setFormDatas({ ...formDatas, name: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
+                onChange={(e) => updateField('name', e.target.value)}
+                className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.name ? 'border-red-500' : 'border-gray-700'}`}
               />
+              {fieldErrors.name && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.name}</p>
+              )}
             </div>
 
             {/* Hours Input */}
@@ -323,9 +358,12 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                 type="email"
                 placeholder="Email address"
                 value={formDatas.email}
-                onChange={(e) => setFormDatas({ ...formDatas, email: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border"
+                onChange={(e) => updateField('email', e.target.value)}
+                className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.email ? 'border-red-500' : 'border-gray-700'}`}
               />
+              {fieldErrors.email && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.email}</p>
+              )}
             </div>
 
             {/* Address Input — opens map picker */}
@@ -333,7 +371,11 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
               <button
                 type="button"
                 onClick={() => setIsMapModalOpen(true)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3 text-white text-base outline-none box-border text-left flex items-center justify-between hover:border-purple-500 transition-colors"
+                className={`w-full border rounded-xl p-3 text-base outline-none box-border text-left flex items-center justify-between transition-colors ${
+                  fieldErrors.address
+                    ? 'border-red-500 bg-gray-800'
+                    : 'border-gray-700 bg-gray-800 hover:border-purple-500'
+                }`}
               >
                 <span className={formDatas.address ? 'text-white' : 'text-gray-500'}>
                   {formDatas.address || 'Choisir une adresse sur la carte'}
@@ -358,6 +400,9 @@ export const CreateNewShop: React.FC<ICreateNewShopProps> = () => {
                   />
                 </svg>
               </button>
+              {fieldErrors.address && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.address}</p>
+              )}
             </div>
 
             {/* Map Picker Modal */}

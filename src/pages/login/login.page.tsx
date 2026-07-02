@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { ILoginUserResponse } from '../../dto'
 import { GuestGuard } from '../../guards'
 import { useLoginUserHook } from '../../hooks'
-import { useAuthStore } from '../../stores'
+import { useAuthStore, useToastStore } from '../../stores'
+import { getFieldErrors, loginSchema, type LoginFormData } from '../../utils'
 
 export interface ILoginPageProps {
   default_props?: boolean
@@ -97,34 +98,55 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({})
+  const [globalError, setGlobalError] = useState<string | null>(null)
   const { setCurrentUser } = useAuthStore()
+  const addToast = useToastStore((s) => s.addToast)
   const { mutate: doLoginUser, isPending } = useLoginUserHook()
+
+  const clearErrors = () => {
+    setGlobalError(null)
+    setFieldErrors({})
+  }
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Login:', { email, password })
-    if (email && password) {
-      doLoginUser(
-        { email, password },
-        {
-          onSuccess: (data) => {
-            console.log('Login successful')
-            if (data?.data?.user) {
-              const connected: ILoginUserResponse = {
-                user: data.data.user,
-                access_token: data.data.access_token,
-              }
-              setCurrentUser(connected)
-              localStorage.setItem('user', JSON.stringify(connected))
-              navigate('/')
+    clearErrors()
+
+    // Validation Zod
+    const data = { email, password }
+    const errors = getFieldErrors(loginSchema, data)
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
+
+    doLoginUser(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          if (data?.data?.user) {
+            const connected: ILoginUserResponse = {
+              user: data.data.user,
+              access_token: data.data.access_token,
             }
-          },
-          onError: (error) => {
-            console.log('Login failed', error)
-          },
+            setCurrentUser(connected)
+            localStorage.setItem('user', JSON.stringify(connected))
+            addToast('Connexion réussie', 'success')
+            navigate('/')
+          }
         },
-      )
-    }
+        onError: (error) => {
+          const axiosError = error as {
+            response?: { status?: number; data?: { message?: string } }
+          }
+          const status = axiosError?.response?.status
+          const backendMsg = axiosError?.response?.data?.message
+
+          if (status === 400 || status === 401) {
+            setGlobalError(backendMsg ?? 'Email ou mot de passe incorrect')
+          }
+        },
+      },
+    )
   }
 
   // const handleGoogleLogin = () => {
@@ -146,15 +168,29 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
           <h1 className="text-white text-2xl font-semibold mb-2">Bienvenue!</h1>
           <p className="text-gray-400 text-sm mb-8">Veuillez entrer vos identifiants</p>
 
+          {globalError && (
+            <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
+              <p className="text-red-400 text-sm">{globalError}</p>
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <input
                 type="email"
                 placeholder="Email Address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 border border-transparent focus:border-gray-600 focus:outline-none transition-colors text-sm"
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (fieldErrors.email || globalError) clearErrors()
+                }}
+                className={`w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 border focus:outline-none transition-colors text-sm ${
+                  fieldErrors.email ? 'border-red-500' : 'border-transparent focus:border-gray-600'
+                }`}
               />
+              {fieldErrors.email && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div className="relative">
@@ -162,8 +198,15 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 pr-12 border border-transparent focus:border-gray-600 focus:outline-none transition-colors text-sm"
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  if (fieldErrors.password || globalError) clearErrors()
+                }}
+                className={`w-full bg-[#1a1a1a] text-white placeholder-gray-500 rounded-lg px-4 py-3.5 pr-12 border focus:outline-none transition-colors text-sm ${
+                  fieldErrors.password
+                    ? 'border-red-500'
+                    : 'border-transparent focus:border-gray-600'
+                }`}
               />
               <button
                 type="button"
@@ -176,6 +219,9 @@ export const LoginPage: React.FC<ILoginPageProps> = () => {
                   <EyeIcon className="w-5 h-5" />
                 )}
               </button>
+              {fieldErrors.password && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.password}</p>
+              )}
             </div>
 
             <button
