@@ -9,7 +9,7 @@ import {
 } from '../../components'
 import { type IWaitingListNumbersDtoOut } from '../../dto'
 import { AuthGuard } from '../../guards'
-import { useGetShopByManagerHook } from '../../hooks'
+import { useGetShopByManagerHook, useWaitingListNumberSocket } from '../../hooks'
 import { useShopStore, useWaitingListNumberStore } from '../../stores'
 
 export interface IHomePageProps {
@@ -27,6 +27,9 @@ export const HomePage: React.FC<IHomePageProps> = () => {
   // Modal state for next number
   // const [showNextNumberModal, setShowNextNumberModal] = useState(false)
   // const [nextNumber, setNextNumber] = useState<IWaitingListNumbersDtoOut | null>(null)
+
+  // WebSocket temps réel — écoute les événements de numbers dans la waiting list
+  useWaitingListNumberSocket()
 
   useEffect(() => {
     if (data) {

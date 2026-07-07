@@ -1,5 +1,6 @@
 export * from './notification'
 export * from './shop'
+export * from './socket'
 export * from './stats'
 export * from './user'
 export * from './waiting-list'

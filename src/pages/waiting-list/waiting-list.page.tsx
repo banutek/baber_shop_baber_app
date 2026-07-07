@@ -10,7 +10,11 @@ import {
   TopBarComponent,
 } from '../../components'
 import { AuthGuard } from '../../guards'
-import { useGetShopByManagerHook, useGetWaitingListByShopHook } from '../../hooks'
+import {
+  useGetShopByManagerHook,
+  useGetWaitingListByShopHook,
+  useWaitingListNumberSocket,
+} from '../../hooks'
 import { useShopStore } from '../../stores'
 
 export interface IWaitingListProps {
@@ -34,6 +38,9 @@ export const WaitingListPage: React.FC<IWaitingListProps> = () => {
       setCurrentWaitingList(waitingListData.data.waitingList)
     }
   }, [waitingListData, setCurrentWaitingList])
+
+  // WebSocket temps réel — écoute les événements de numbers dans la waiting list
+  useWaitingListNumberSocket()
 
   return (
     <AuthGuard>

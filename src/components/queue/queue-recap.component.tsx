@@ -221,7 +221,9 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
               </div>
               <div className="flex-1 min-w-0">
                 {currentNumber?.status == IN_PROGRESS ? (
-                  <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Client actuel</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">
+                    Client actuel
+                  </div>
                 ) : currentNumber?.status == COMPLETED ? (
                   <div className="text-[10px] sm:text-xs text-green-400 font-bold uppercase tracking-wide">
                     Client servit
@@ -367,7 +369,9 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
                 {number.value}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">Client #{number.deviceId}</div>
+                <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                  Client #{number.deviceId}
+                </div>
                 <div className="text-[10px] sm:text-xs text-gray-400">
                   {number?.device?.platform} · Tiré à{' '}
                   {new Date(number.createdAt).toLocaleTimeString('fr-FR')}
@@ -396,5 +400,9 @@ const QueueItemElapsedMin: React.FC<{ createdAt: Date | string }> = ({ createdAt
     return <div className="text-[10px] sm:text-xs text-gray-400 ml-auto flex-shrink-0" />
   }
 
-  return <div className="text-[10px] sm:text-xs text-gray-400 ml-auto flex-shrink-0 whitespace-nowrap">{elapsed} min</div>
+  return (
+    <div className="text-[10px] sm:text-xs text-gray-400 ml-auto flex-shrink-0 whitespace-nowrap">
+      {elapsed} min
+    </div>
+  )
 }

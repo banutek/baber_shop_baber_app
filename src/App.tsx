@@ -7,6 +7,7 @@ import {
   type IUpdateListNumberStatusHookParams,
   useUpdateListNumberStatusHook,
   useUpdateWaitingListInfosHook,
+  useWaitingListSocket,
 } from './hooks'
 import {
   CreateNewShop,
@@ -25,6 +26,9 @@ function App() {
   const { currentWaitingList, setCurrentWaitingList } = useShopStore()
   const { mutate: doUpdateListNumberStatus, isPending } = useUpdateListNumberStatusHook()
   const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
+
+  // WebSocket temps réel — écoute les événements de waiting list
+  useWaitingListSocket()
 
   const doCloseModal = () => {
     setShowNextNumberModal(false)
