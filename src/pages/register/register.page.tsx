@@ -214,7 +214,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="text"
                 placeholder="Prénom"
                 value={formData.first_name}
-                onChange={(e) => updateField('firstName', e.target.value)}
+                onChange={(e) => updateField('first_name', e.target.value)}
                 className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.firstName ? 'border-red-500' : 'border-gray-700'}`}
               />
               {fieldErrors.firstName && (
@@ -228,7 +228,7 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
                 type="text"
                 placeholder="Nom de famille"
                 value={formData.last_name}
-                onChange={(e) => updateField('lastName', e.target.value)}
+                onChange={(e) => updateField('last_name', e.target.value)}
                 className={`w-full bg-gray-800 border rounded-xl p-3 text-white text-base outline-none box-border ${fieldErrors.lastName ? 'border-red-500' : 'border-gray-700'}`}
               />
               {fieldErrors.lastName && (
