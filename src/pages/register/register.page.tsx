@@ -314,27 +314,23 @@ export const RegisterPage: React.FC<IRegisterPageProps> = () => {
               )}
             </div>
 
-            {/* Terms Checkbox */}
-            {/* <div className="mb-6">
-              <label className="flex items-start text-gray-400 text-sm leading-relaxed cursor-pointer">
+            {/* Agree Terms Checkbox */}
+            <div className="mb-5">
+              <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.agreeTerms}
-                  onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
-                  className="mr-3 mt-0.5 w-4 h-4 accent-purple-500"
+                  onChange={(e) => updateField('agreeTerms', e.target.checked)}
+                  className="w-4 h-4 accent-amber-500 cursor-pointer"
                 />
-                <span>
-                  By creating an account, you agree to our{' '}
-                  <a href="#" className="text-purple-500 no-underline hover:underline">
-                    Terms of Use
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="text-purple-500 no-underline hover:underline">
-                    Privacy Policy
-                  </a>
+                <span className="text-gray-300 text-sm">
+                  J'accepte les conditions d'utilisation
                 </span>
               </label>
-            </div> */}
+              {fieldErrors.agreeTerms && (
+                <p className="text-red-400 text-xs mt-1 ml-1">{fieldErrors.agreeTerms}</p>
+              )}
+            </div>
 
             {/* Create Account Button */}
             <button
