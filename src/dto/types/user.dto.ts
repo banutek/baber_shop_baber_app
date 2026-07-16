@@ -17,6 +17,14 @@ export interface ILoginUserDtoIn {
   password: string
 }
 
+export interface IUpdateUserDtoIn {
+  firstName?: string
+  lastName?: string
+  email?: string
+  phone?: string
+  address?: string
+}
+
 export interface ILoginUserResponse {
   access_token: string
   user: IUserDtoOut

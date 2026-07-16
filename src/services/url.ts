@@ -7,12 +7,14 @@ export const prefixer = API_URL
 export const authUrls = {
   LOGIN_USER: `${prefixer}auth/login`,
   REGISTER_USER: `${prefixer}auth/register`,
+  UPDATE_USER: (userId: string) => `${prefixer}auth/profile/${userId}`,
 }
 
 export const barberShopUrls = {
   CREATE_BARBER_SHOP: `${prefixer}barber-shop/create`,
   GET_BARBER_SHOP_BY_MANAGER_ID: `${prefixer}barber-shop/by-manager-id`,
   UPDATE_SHOP_STATUS: (shopId: string) => `${prefixer}barber-shop/${shopId}/status`,
+  UPDATE_SHOP: (shopId: string) => `${prefixer}barber-shop/${shopId}`,
 }
 
 export const waitingListUrls = {

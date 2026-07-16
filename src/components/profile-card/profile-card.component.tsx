@@ -1,19 +1,20 @@
 import type React from 'react'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { ShopOpenStatus } from '../../dto'
 import { useAutoCloseShopHook, useUpdateShopStatusHook } from '../../hooks'
-import { useAuthStore, useShopStore } from '../../stores'
 import { prefixer } from '../../services'
-import { useMemo } from 'react'
+import { useAuthStore, useShopStore } from '../../stores'
 import { truncateAtNthComma } from '../../utils'
 
 export interface IProfileComponentProps {
   default_props?: boolean
   default_method?: () => void
+  onEditProfile?: () => void
 }
 
-export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
+export const ProfileCardComponent: React.FC<IProfileComponentProps> = ({ onEditProfile }) => {
   const navigate = useNavigate()
   const { currentUser } = useAuthStore()
   const { currentShop } = useShopStore()
@@ -69,7 +70,7 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
             }}
           />
         </div>
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative">
           <div className="relative inline-block mb-3.5">
             <div className="w-[84px] h-[84px] rounded-full bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center font-serif text-3xl text-white border-[3px] border-white/15 shadow-lg">
@@ -122,7 +123,10 @@ export const ProfileCardComponent: React.FC<IProfileComponentProps> = () => {
             <span className="font-medium text-gray-900">{currentShop?.phone}</span>
           </div>
         </div>
-        <button className="w-full mt-4 py-2.5 rounded-lg border-2 border-amber-600 bg-transparent text-amber-700 font-sans text-sm font-semibold hover:bg-amber-50 transition-all duration-200 tracking-wide cursor-pointer">
+        <button
+          onClick={onEditProfile}
+          className="w-full mt-4 py-2.5 rounded-lg border-2 border-amber-600 bg-transparent text-amber-700 font-sans text-sm font-semibold hover:bg-amber-50 transition-all duration-200 tracking-wide cursor-pointer"
+        >
           ✏️ &nbsp; Modifier le profil
         </button>
         <button

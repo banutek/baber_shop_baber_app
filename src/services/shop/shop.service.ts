@@ -1,4 +1,4 @@
-import type { IUpdateShopStatusDtoIn } from '../../dto'
+import type { IUpdateShopStatusDtoIn, INewBarberShopDtoIn } from '../../dto'
 import BaseMethods from '../BaseMethods'
 import { barberShopUrls } from '../url'
 
@@ -9,4 +9,6 @@ export class ShopService {
     BaseMethods.getRequest(barberShopUrls.GET_BARBER_SHOP_BY_MANAGER_ID, true)
   static update_shop_status = (shopId: string, datas: IUpdateShopStatusDtoIn) =>
     BaseMethods.patchRequest(barberShopUrls.UPDATE_SHOP_STATUS(shopId), datas, true)
+  static update_shop = (shopId: string, datas: Partial<INewBarberShopDtoIn>) =>
+    BaseMethods.patchRequest(barberShopUrls.UPDATE_SHOP(shopId), datas, true)
 }

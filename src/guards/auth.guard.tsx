@@ -37,7 +37,11 @@ export const AuthGuard: React.FC<IAuthGuardProps> = ({ children }) => {
     return <Navigate to="/login" />
   }
 
-  if (!connectedUser.user.manager_barber_shop && pathname !== '/create-new-shop') {
+  if (
+    !connectedUser.user.manager_barber_shop &&
+    pathname !== '/create-new-shop' &&
+    !connectedUser.user.updatedAt
+  ) {
     return <Navigate to="/create-new-shop" />
   }
 
