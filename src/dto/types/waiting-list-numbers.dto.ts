@@ -22,3 +22,7 @@ export interface IWaitingListNumbersDtoOut {
 export interface IUpdateWaitingListNumberStatusDtoIn {
   status: WaitingListNumberStatus
 }
+
+export interface IServeByBarcodeDtoIn {
+  barcode: string
+}

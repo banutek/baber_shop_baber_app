@@ -340,24 +340,6 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
       )}
       {(currentWaitingList?.waiting_list_numbers?.length ?? 0) > 0 && (
         <div className="flex flex-col">
-          {/* <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
-            <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">07</div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-900">Anonyme · Device #4F2A</div>
-              <div className="text-xs text-gray-400">Android · Tiré à 10:14</div>
-            </div>
-            <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-green-50 text-green-600 ml-2">En chaise</span>
-            <div className="text-xs text-gray-400 ml-auto">3 min</div>
-          </div> */}
-          {/* <div className="flex items-center gap-3.5 py-3 px-[22px] border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 cursor-default">
-            <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-semibold flex-shrink-0">08</div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-gray-900">Youssef Amrani</div>
-              <div className="text-xs text-gray-400">iOS · Compte client</div>
-            </div>
-            <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-amber-50 text-amber-700 ml-2">Présent</span>
-            <div className="text-xs text-gray-400 ml-auto">12 min</div>
-          </div> */}
           {currentWaitingList?.waiting_list_numbers?.map((number, index) => (
             <div
               key={index}

@@ -1,4 +1,4 @@
-import type { IUpdateWaitingListNumberStatusDtoIn } from '../../dto'
+import type { IUpdateWaitingListNumberStatusDtoIn, IServeByBarcodeDtoIn } from '../../dto'
 import BaseMethods from '../BaseMethods'
 import { waitingListNumberUrls } from '../url'
 
@@ -15,4 +15,7 @@ export class WaitingListNumberService {
       datas,
       false,
     )
+
+  static serveByBarcode = (datas: IServeByBarcodeDtoIn) =>
+    BaseMethods.postRequest(waitingListNumberUrls.SERVE_BY_BARCODE, datas, false)
 }

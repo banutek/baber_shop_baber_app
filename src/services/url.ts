@@ -33,6 +33,7 @@ export const waitingListNumberUrls = {
   // GET_WAITING_LIST_NUMBER_BY_LIST_ID: (listId: string) => `${prefixer}waiting-list-number/by-list/${listId}`,
   UPDATE_WAITING_LIST_NUMBER_STATUS: (numberId: string) =>
     `${prefixer}waiting-list-number/status/${numberId}`,
+  SERVE_BY_BARCODE: `${prefixer}waiting-list-number/serve-by-barcode`,
 }
 
 export const notificationUrls = {

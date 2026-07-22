@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -100,6 +101,47 @@ function App() {
       },
     })
   }
+
+  // Appelé quand le client scanne le QR code et que le backend met à jour le statut
+  const handlePostServe = () => {
+    if (!nextNumber) return
+
+    // Mettre à jour le current_number de la waiting list
+    handleTakeNextNumber()
+
+    // Identifier le numéro suivant et le passer en NEXT
+    const candidates = currentWaitingList?.waiting_list_numbers?.filter(
+      (item) =>
+        [WaitingListNumberStatus.CREATED, WaitingListNumberStatus.PENDING].includes(item.status) &&
+        item.id !== nextNumber?.id,
+    )
+    if (candidates && candidates.length > 0) {
+      const sorted = [...candidates].sort((a, b) => Number(a.value) - Number(b.value))
+      const nextInLine = sorted.find((item) => Number(item.value) > Number(nextNumber?.value ?? 0))
+      if (nextInLine) {
+        doUpdateListNumberStatus({
+          numberId: nextInLine.id,
+          datas: { status: WaitingListNumberStatus.NEXT },
+        } as IUpdateListNumberStatusHookParams)
+      }
+    }
+
+    doCloseModal()
+  }
+
+  // Effet : détecte quand le nextNumber est servi en externe (scan QR code par le client)
+  useEffect(() => {
+    if (!showNextNumberModal || !nextNumber) return
+
+    const updatedNumber = currentWaitingList?.waiting_list_numbers?.find(
+      (n) => n.id === nextNumber.id,
+    )
+
+    // Si le numéro est passé à IN_PROGRESS par une action externe (scan QR code)
+    if (updatedNumber?.status === WaitingListNumberStatus.IN_PROGRESS) {
+      handlePostServe()
+    }
+  }, [currentWaitingList?.waiting_list_numbers])
 
   return (
     <>
