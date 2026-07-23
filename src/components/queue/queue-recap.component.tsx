@@ -1,6 +1,7 @@
 import type React from 'react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 
 import {
   type INewWaitingListDtoIn,
@@ -35,6 +36,7 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
   const { CREATED, PENDING, NEXT, IN_PROGRESS, COMPLETED, MISSING } = WaitingListNumberStatus
 
   const { currentShop, setCurrentShop, currentWaitingList, setCurrentWaitingList } = useShopStore()
+  const queryClient = useQueryClient()
   const isCurrentNumberGreaterThanZero = (currentWaitingList?.current_number ?? 0) > 0
   const currentNumber = currentWaitingList?.waiting_list_numbers?.find(
     (_) => Number(_.value) === currentWaitingList?.current_number,
@@ -176,6 +178,8 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
         if (data.data.waitingListNumber) {
           currentNumber.status = currentStatusToHave
         }
+        // Invalider les stats pour forcer un recalcul immédiat
+        queryClient.invalidateQueries({ queryKey: ['daily-stats'] })
         const next = getNextNumber(currentWaitingList?.current_number)
         if (next !== -1 && onOpenNextNumberModal) {
           onOpenNextNumberModal(next)

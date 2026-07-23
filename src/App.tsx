@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { ConfirmTooltip, ToastContainer } from './components'
 import { WaitingListNumberStatus } from './dto'
@@ -27,6 +28,7 @@ function App() {
   const { currentWaitingList, setCurrentWaitingList } = useShopStore()
   const { mutate: doUpdateListNumberStatus, isPending } = useUpdateListNumberStatusHook()
   const { mutate: doUpdateWaitingListInfos } = useUpdateWaitingListInfosHook()
+  const queryClient = useQueryClient()
 
   // WebSocket temps réel — écoute les événements de waiting list
   useWaitingListSocket()
@@ -51,6 +53,8 @@ function App() {
     doUpdateListNumberStatus(requestDatas as IUpdateListNumberStatusHookParams, {
       onSuccess: (data) => {
         if (data?.data?.waitingListNumber) {
+          // Invalider les stats pour forcer un recalcul immédiat
+          queryClient.invalidateQueries({ queryKey: ['daily-stats'] })
           if (statusToHave === WaitingListNumberStatus.IN_PROGRESS) {
             handleTakeNextNumber()
             // Identifier le numéro suivant et le passer en NEXT
