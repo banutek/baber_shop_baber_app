@@ -52,10 +52,12 @@ export const QueueRecapComponent: React.FC<IQueueRecapComponentProps> = ({
   const { mutate: doUpdateListNumberStatus, isPending } = useUpdateListNumberStatusHook()
 
   useEffect(() => {
-    if (waitingListData?.data?.waitingList) {
+    // Ne charger les données HTTP que si le store n'a pas encore de waiting list
+    // (chargement initial). Après, le WebSocket et handleOpenWaitingList gèrent les mises à jour.
+    if (waitingListData?.data?.waitingList && !currentWaitingList) {
       setCurrentWaitingList(waitingListData.data.waitingList)
     }
-  }, [waitingListData, setCurrentWaitingList])
+  }, [waitingListData, currentWaitingList, setCurrentWaitingList])
 
   const handleOpenWaitingList = () => {
     if (!currentShop?.id) return

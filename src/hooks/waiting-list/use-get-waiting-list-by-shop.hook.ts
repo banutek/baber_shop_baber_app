@@ -5,10 +5,6 @@ import type { IWaitingListDtoOut } from '../../dto'
 import { WaitingListService } from '../../services'
 
 export const useGetWaitingListByShopHook = (shopId: string) => {
-  // const currentList = currentShop?.barber_shop_waiting_list?.find(
-  //   (_) => new Date(_.createdAt).getDay() === new Date().getDay(),
-  // )
-
   return useQuery<AxiosResponse<{ waitingList: IWaitingListDtoOut }>, Error>({
     queryKey: ['get-waiting-list-by-shop', shopId],
     queryFn: async () => {
@@ -18,5 +14,7 @@ export const useGetWaitingListByShopHook = (shopId: string) => {
     },
     retry: 1,
     enabled: !!shopId,
+    refetchOnWindowFocus: false,
+    staleTime: 30_000,
   })
 }
