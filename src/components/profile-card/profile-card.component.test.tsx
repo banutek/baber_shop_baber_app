@@ -51,6 +51,7 @@ describe('ProfileCardComponent', () => {
         manager: {} as any,
         barber_shop_subscription: '',
         barber_shop_waiting_list: [],
+        barber_shop_service: [],
         barber_shop_scan_event: '',
       },
       currentWaitingList: null,
