@@ -17,6 +17,14 @@ export const barberShopUrls = {
   UPDATE_SHOP: (shopId: string) => `${prefixer}barber-shop/${shopId}`,
 }
 
+export const barberShopServiceUrls = {
+  GET_ALL_SERVICES: `${prefixer}services`,
+  GET_ALL_PRINCIPAL_SERVICES: `${prefixer}services/principal`,
+  GET_SECONDARY_SERVICE_BY_PARENT_ID: (parentId: string) =>
+    `${prefixer}services/secondary/${parentId}`,
+  MANAGE_SHOP_SERVICES_LIST: (shopId: string) => `${prefixer}services/shop/${shopId}/services`,
+}
+
 export const waitingListUrls = {
   CREATE_WAITING_LIST: `${prefixer}waiting-list/create`,
   GET_WAITING_LIST_BY_SHOP_ID: (shopId: string) => `${prefixer}waiting-list/by-shop-id/${shopId}`,
