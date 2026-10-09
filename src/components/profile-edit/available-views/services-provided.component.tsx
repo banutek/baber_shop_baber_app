@@ -285,7 +285,7 @@ export const ServicesProvidedComponent: React.FC<IServicesProvidedComponentProps
         disabled={!currentShop?.id || !hasChanges || isManagingServices}
         className="mt-3 w-full py-2.5 rounded-lg bg-amber-600 text-white font-sans text-sm font-semibold hover:bg-amber-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        {isManagingServices ? 'Enregistrement…' : 'Enregistrer les services'}
+        {isManagingServices ? 'Enregistrement…' : '💾   Enregistrer les services'}
       </button>
     </form>
   )
