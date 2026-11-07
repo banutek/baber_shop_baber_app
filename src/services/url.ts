@@ -32,6 +32,15 @@ export const waitingListUrls = {
   UPDATE_WAITING_LIST: (listId: string) => `${prefixer}waiting-list/${listId}`,
 }
 
+export const galleryUrls = {
+  UPLOAD_MULTIPLE_IMAGE: `${prefixer}gallery/create-multiple`,
+  UPLOAD_ONE_IMAGE: `${prefixer}gallery/create`,
+  GET_GALLERY_BY_SHOP_ID: (shopId: string) => `${prefixer}gallery/shop/${shopId}`,
+  GET_GALLERY_BY_SERVICE_ID: (serviceId: string) => `${prefixer}gallery/service/${serviceId}`,
+  UPDATE_GALLERY: (galleryID: string) => `${prefixer}gallery/${galleryID}`,
+  DELETE_GALLERY: (galleryID: string) => `${prefixer}gallery/${galleryID}`,
+}
+
 export const statsUrls = {
   GET_DAILY_STATS: (shopId: string) => `${prefixer}stats/shop/${shopId}/daily`,
 }

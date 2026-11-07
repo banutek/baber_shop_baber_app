@@ -3,6 +3,7 @@ import type React from 'react'
 import { EditShopInfosComponent } from './available-views/edit-shop-infos.component'
 import { EditPersonInfosComponent } from './available-views/edit-perso-infos.component'
 import { ServicesProvidedComponent } from './available-views/services-provided.component'
+import { GalleryComponent } from './available-views/gallery.component'
 
 export interface IProfileEditComponentProps {
   onCancel: () => void
@@ -31,6 +32,9 @@ export const ProfileEditComponent: React.FC<IProfileEditComponentProps> = ({ onC
 
         {/* ── Gestion des services ── */}
         <ServicesProvidedComponent />
+
+        {/* ── Gestion de la galerie ── */}
+        <GalleryComponent />
       </div>
     </div>
   )

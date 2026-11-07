@@ -171,6 +171,23 @@ class BaseMethods {
     return axios(config)
   }
 
+  static async patchFileRequest(
+    url: string,
+    body: unknown,
+    required_auth: boolean,
+  ): Promise<AxiosResponse> {
+    const headers = required_auth ? BaseMethods.getHeadersAuth(true) : BaseMethods.getHeaders(true)
+
+    const config: AxiosRequestConfig = {
+      method: 'PATCH',
+      url,
+      headers,
+      data: body,
+    }
+
+    return axios(config)
+  }
+
   static async deleteRequest(url: string, required_auth: boolean): Promise<AxiosResponse> {
     const headers = required_auth ? BaseMethods.getHeadersAuth() : BaseMethods.getHeaders()
 
